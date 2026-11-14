@@ -41,7 +41,7 @@ const OG_DEFAULT = /<meta property="og:image" content="[^"]*">\n<meta property="
 const meta = (re, html, value) => html.replace(re, value);
 
 const tpl = read("client.html");
-const urls = ["/", "/about", "/work", "/contact", "/links"];
+const urls = ["/", "/about", "/work", "/contact", "/links", "/profile"];
 let videoPages = 0;
 for (const g of GROUPS) {
   const desc = g.group
