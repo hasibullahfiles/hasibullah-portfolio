@@ -421,7 +421,7 @@ if (stage) {
   const at = Math.max(0, GROUPS.findIndex((x) => x.id === id));
   const g = GROUPS[at];
   const list = items([g]);
-  document.title = `${g.name}. Md Hasibullah`;
+  document.title = g.name;
   document.getElementById("cname").textContent = g.name;
   const avBox = document.getElementById("cavs");
   if ((g.avatars || []).length) avBox.append(...avatarsOf(g)); else avBox.hidden = true;

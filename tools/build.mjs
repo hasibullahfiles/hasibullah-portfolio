@@ -33,7 +33,7 @@ write("work/index.html", read("work.html"));
 
 const tpl = read("client.html");
 for (const g of GROUPS) {
-  const title = `${g.name}. Md Hasibullah`;
+  const title = g.name;
   const desc = g.group
     ? `Videos Md Hasibullah edited for ${g.name === "More creators" ? "creators including Ben Aizen, Roman, Marisa and Cole Gonzales" : g.name}.`
     : `Videos Md Hasibullah edited for ${g.name}.`;
