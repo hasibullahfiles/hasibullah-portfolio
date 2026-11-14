@@ -728,3 +728,18 @@ html { background: var(--bg); }
 .car .now .stats { justify-content: center; }
 .car .now + .car__nav { margin-top: 12px; }
 .car__nav { padding-right: 0; }
+
+/* Stacked pictures: the first sits on top (z-index set in main.js); the one under the pointer rises above
+   the rest, and its name fades in over it. */
+.wrow__avs .av, .pavs .av { position: relative; }
+.av.av--up { z-index: 50 !important; }
+.avname {
+  position: fixed; left: 0; top: 0; z-index: 1000; pointer-events: none; white-space: nowrap;
+  font: 500 0.75rem/1 var(--font); color: var(--bg); background: var(--ink); padding: 6px 9px; border-radius: 6px;
+  opacity: 0; transform: translate(-50%, calc(-100% + 4px)); transition: opacity 180ms var(--ease-out), transform 220ms var(--ease-out);
+}
+.avname.is-on { opacity: 1; transform: translate(-50%, -100%); }
+@media (prefers-reduced-motion: reduce) { .avname { transition: opacity 120ms linear; transform: translate(-50%, -100%); } }
+/* The creator's name beside the views under the centred video (More creators, Think Studio). */
+.now__who { color: var(--ink); font-size: 0.8125rem; font-weight: 500; }
+.car .now #nowstats, .project__media .now #nowstats { display: inline-flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center; }

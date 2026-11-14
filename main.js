@@ -11,7 +11,7 @@ const GROUPS = [
     videos: [["DfC3_uyAuWY", 159000], ["Dc_mgAvu1sw", 31000], ["DcyrXDSJNMK", 30800], ["Dd_95hIJXv1", 11800], ["Dc4iVrPhb7p", 8747], ["DdGk0maRsas", 8059], ["Dcgy5iihDyn", 7737]] },
   { id: "daniel-do", cat: "Creators", name: "Daniel Do", handle: "justdodani", reach: { instagram: 287000, tiktok: 213200 }, avatars: ["justdodani"],
     videos: [["DOb2Co7jLV3", 173000], ["DZdEccwMUZw", 146000], ["DOjJJ_jjMEQ", 46700], ["DZI0BsiswX9", 15600], ["DYutfBTsURH", 14700], ["DN8Rv9wDDeI", 13800]] },
-  { id: "creators", group: true, cat: "Creators", name: "More creators", reach: { instagram: 538862 }, avatars: ["artzenmedia", "marisa", "shootsroman", "baurrovski", "hasnatcreates", "ossa.ai", "saturate.be"],
+  { id: "creators", group: true, cat: "Creators", name: "More creators", reach: { instagram: 538862, tiktok: 5400000 /* TikTok: Cole Gonzales, 5.4M, read 15 Nov 2026 */ }, avatars: ["marisa", "artzenmedia", "baurrovski", "colewherld", "shootsroman", "hasnatcreates"],
     videos: [["DeBvhCLy_g9", 556000, "Ben Aizen"], ["De-2bbIv9ys", 90900, "Roman"], ["DRy81QPkrN1", 17900, "Baurjan Tulegenov"],["o8S4qdbACLA", null, "Marisa", "https://www.youtube.com/shorts/o8S4qdbACLA"], ["DVqc2B1AfKr", 2432, "Md Arif Hasnat"], ["DFYYiZxNKpO", 831000, "Cole Gonzales"], ["DWWwD1MjXKq", 5926, "Saturate"]] },
   { id: "think-studio", group: true, cat: "Agency", name: "Think Studio", handle: "thinkstudioau", avatars: ["thinkstudioau", "sonnybillwilliams", "unitedmuslimsofaustralia", "islamophobiaregisteraus"],
     videos: [["DMfF8FMxQnp", 1000000, "Sonny Bill Williams"], ["DPOIQcVkq83", 60800, "United Muslims of Australia"], ["DK_n7QsyRq0", 52300, "Think Studio"], ["Db7uiUoxQGb", 32400, "Islamophobia Register"], ["DGxkAHKSLau", 32100, "United Muslims of Australia"], ["DV3Mxsmjzr_", 23900, "Islamophobia Register"], ["DPQz6LVDSNM", 4608, "United Muslims of Australia"]] },
@@ -26,6 +26,14 @@ const GROUPS = [
   { id: "launch", cat: "Launch videos", name: "Launch videos", handle: "warmblu.studio", reach: { instagram: 10300 }, pageViews: 1182700, avatars: ["warmblu.studio"],
     videos: [["DXbzIv-Sq0B", 287000], ["Dd3sQYth69J", 182000], ["DaAnRdClRgY", 112000], ["DXO4886yffD", 111000], ["DZH2QHyyU8l", 110000], ["DXWoUEQyTQs", 66600], ["DXjZrdqEkbY", 53000], ["Dc6BJJrhmnm", 40700]] },
 ];
+
+// Whose picture each one is, shown when the pointer is on it in a stack of pictures.
+const AV_NAMES = {
+  marisa: "Marisa", artzenmedia: "Ben Aizen", baurrovski: "Baurjan Tulegenov", colewherld: "Cole Gonzales",
+  shootsroman: "Roman", hasnatcreates: "Md Arif Hasnat", "saturate.be": "Saturate",
+  thinkstudioau: "Think Studio", sonnybillwilliams: "Sonny Bill Williams",
+  unitedmuslimsofaustralia: "United Muslims of Australia", islamophobiaregisteraus: "Islamophobia Register",
+};
 
 // A client's other public profiles, shown as icons on their page. Instagram is added from `handle`.
 // Only add a profile once you have opened it and confirmed it is theirs.
@@ -92,6 +100,9 @@ const MESSAGES = {
     { who: "Baurjan Tulegenov", from: "Baurjan Tulegenov", avatar: "baurrovski", date: "28 Nov 2025", text: "best edit so far" },
     { who: "Baurjan Tulegenov", from: "Baurjan Tulegenov", avatar: "baurrovski", date: "4 Apr 2026", text: "very good work as usual 🔥🔥🔥" },
     { who: "Roman", from: "Roman", avatar: "shootsroman", date: "8 Oct 2026", text: "Your videos are insane!" },
+    { who: "Cole Gonzales", from: "Cole Gonzales", avatar: "colewherld", date: "1 May 2026", text: "great work brother, looking forward to getting the product live and getting in consistent flow of videos" },
+    { who: "Cole Gonzales", from: "Cole Gonzales", avatar: "colewherld", date: "28 Apr 2026", text: "All looks great bro let's go" },
+    { who: "Cole Gonzales", from: "Cole Gonzales", avatar: "colewherld", date: "22 Jun 2026", text: "looking really good" },
     { who: "Saturate", from: "Noah Stupers", avatar: "saturate.be", date: "15 Mar 2026", text: "I appreciate your hard work brother - crazy talented guy" },
     { who: "Saturate", from: "Noah Stupers", avatar: "saturate.be", date: "15 Mar 2026", text: "Yes man, thank you for this 🙏 worth every dollar" },
   ],
@@ -108,7 +119,7 @@ const NOTES = {
 
 // Shown at double size on the home canvas.
 const BIG = new Set(["DVg-_5giapC", "DW4X4aAiRFF", "DWsICUqCcpT", "DVeGTOBkWaC", "DZdEP5eJXfQ",
-  "o8S4qdbACLA", "DcyrXDSJNMK", "DfC3_uyAuWY", "Dc_mgAvu1sw", "DVqc2B1AfKr", "DfLAvGUOZ6N", "Da8CmrlyVYc", "DbLn3AFymYy", "Dd6h-e1BIfA"]);
+  "o8S4qdbACLA", "DcyrXDSJNMK", "DfC3_uyAuWY", "Dc_mgAvu1sw", "DVqc2B1AfKr", "DfLAvGUOZ6N", "Da8CmrlyVYc", "DbLn3AFymYy", "Dd6h-e1BIfA", "DXbzIv-Sq0B"]);
 // Vertical videos that should still be shown in a horizontal frame (the frame crops the middle).
 const FORCE_WIDE = new Set([]);
 
@@ -537,7 +548,12 @@ if (canvas) {
 }
 
 /* ---------- Work: clients as a ruled list, grouped by kind ---------- */
-const avatarsOf = (g) => (g.avatars || []).map((h) => { const i = el("img", "av"); i.src = `/avatars/${h}.jpg`; i.alt = ""; i.decoding = "async"; i.width = 150; i.height = 150; return i; });
+// In a stack the first picture sits on top, so the first one listed is always fully visible.
+const avatarsOf = (g) => (g.avatars || []).map((h, k, all) => {
+  const i = el("img", "av"); i.src = `/avatars/${h}.jpg`; i.alt = AV_NAMES[h] || ""; i.decoding = "async"; i.width = 150; i.height = 150;
+  if (all.length > 1) { i.style.zIndex = String(all.length - k); if (AV_NAMES[h]) i.dataset.name = AV_NAMES[h]; }
+  return i;
+});
 const worklist = document.getElementById("worklist");
 if (worklist) {
   const cats = [...new Set(GROUPS.map((g) => g.cat))];
@@ -654,17 +670,15 @@ if (stage) {
   const namesBox = document.getElementById("cnames");
   const nameEls = new Map();
   let jump = () => {};
-  if (g.group && withNames.length > 1) {
-    withNames.forEach((n) => {
-      const b = el("button", "pname", n); b.type = "button";
-      b.addEventListener("click", () => jump(list.findIndex((r) => r.who === n)));
-      nameEls.set(n, b); namesBox.append(b);
-    });
-  } else { namesBox.hidden = true; }
+  // Groups no longer list the names here: each picture shows its name on hover, and the video
+  // in the centre carries its creator's name next to the views.
+  namesBox.hidden = true;
+  const many = g.group && withNames.length > 1;
   // Details of the video currently in the centre.
   const now = { stats: document.getElementById("nowstats") };
   const showNow = (r) => {
-    now.stats.replaceChildren(stats(r));
+    if (many) now.stats.replaceChildren(el("span", "now__who", r.who), stats(r));
+    else now.stats.replaceChildren(stats(r));
     nameEls.forEach((b, n) => b.setAttribute("aria-current", n === r.who ? "true" : "false"));
   };
   if (list.length) showNow(list[start]); else document.getElementById("now").hidden = true;
@@ -1068,4 +1082,30 @@ if (form) {
     name.addEventListener("pointerleave", () => { want = 0; run(); });
   }
   window.addEventListener("scroll", () => { if (want) { want = 0; run(); } }, { passive: true });
+})();
+
+/* ---------- Names on stacked pictures ----------
+   In a stack of pictures (More creators, Think Studio), pointing at one brings it to the top and
+   its name fades in just above it; moving off fades the name out and the picture settles back. */
+(() => {
+  if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+  const tag = el("div", "avname"); tag.setAttribute("aria-hidden", "true");
+  document.body.append(tag);
+  let on = null;
+  const hide = () => { if (on) { on.classList.remove("av--up"); on = null; } tag.classList.remove("is-on"); };
+  document.addEventListener("pointerover", (e) => {
+    const av = e.target.closest && e.target.closest("img.av[data-name]");
+    if (!av) return;
+    if (on && on !== av) on.classList.remove("av--up");
+    on = av; av.classList.add("av--up");
+    tag.textContent = av.dataset.name;
+    const b = av.getBoundingClientRect();
+    tag.style.left = `${b.left + b.width / 2}px`; tag.style.top = `${b.top - 8}px`;
+    tag.classList.add("is-on");
+  });
+  document.addEventListener("pointerout", (e) => {
+    const av = e.target.closest && e.target.closest("img.av[data-name]");
+    if (av && !(e.relatedTarget && av.contains(e.relatedTarget))) hide();
+  });
+  window.addEventListener("scroll", hide, { passive: true });
 })();
