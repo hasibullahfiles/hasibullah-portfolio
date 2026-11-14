@@ -102,7 +102,7 @@ const lock = (v) => {
   return v;
 };
 const NAMES = { instagram: "Instagram", youtube: "YouTube", tiktok: "TikTok", x: "X", linkedin: "LinkedIn", facebook: "Facebook", threads: "Threads" };
-const icon = (p) => { const i = el("img", "ico"); i.src = `icons/${p}.svg`; i.alt = NAMES[p] || p; i.width = 14; i.height = 14; return i; };
+const icon = (p) => { const i = el("img", "ico"); i.src = `/icons/${p}.svg`; i.alt = NAMES[p] || p; i.width = 14; i.height = 14; return i; };
 // "logos + combined views" for one video.
 function stats(r) {
   const s = el("span", "stats");
@@ -125,13 +125,13 @@ function openPlayer(r) {
     player.addEventListener("click", (e) => { if (e.target === player || e.target.classList.contains("player__in")) player.close(); });
   }
   const v = player.querySelector("video");
-  v.src = `videos/${r.code}.mp4`;
-  v.poster = `covers/${r.code}.jpg`;
+  v.src = `/videos/${r.code}.mp4`;
+  v.poster = `/covers/${r.code}.jpg`;
   const [a, b, c] = player.querySelector(".player__meta").children;
   a.textContent = r.who;
   b.textContent = r.views ? `${fmt(r.views)} views` : "";
   c.textContent = `More from ${r.group.name}`;
-  c.href = `client.html?c=${r.group.id}`;
+  c.href = `/work/${r.group.id}`;
   c.removeAttribute("target");
   player.showModal();
   v.play().catch(() => {});
@@ -141,7 +141,7 @@ function openPlayer(r) {
 function frame(r, wide, small) {
   const m = el("span", wide ? "m m--wide" : "m");
   const img = el("img");
-  img.src = small ? `covers/sm/${r.code}.jpg` : `covers/${r.code}.jpg`; img.alt = ""; img.decoding = "async"; img.draggable = false;
+  img.src = small ? `/covers/sm/${r.code}.jpg` : `/covers/${r.code}.jpg`; img.alt = ""; img.decoding = "async"; img.draggable = false;
   m.append(img);
   return m;
 }
@@ -160,7 +160,7 @@ document.addEventListener("mouseover", (e) => {
   const r = byCode.get(a.dataset.code);
   if (!r || !r.local) return;
   const v = el("video");
-  v.muted = true; v.loop = true; v.playsInline = true; v.preload = "auto"; v.src = `videos/${r.code}.mp4`;
+  v.muted = true; v.loop = true; v.playsInline = true; v.preload = "auto"; v.src = `/videos/${r.code}.mp4`;
   a._v = v;
   a.querySelector(".m").append(v);
   v.play().catch(() => {});
@@ -360,7 +360,7 @@ if (canvas) {
 }
 
 /* ---------- Work: clients as a ruled list, grouped by kind ---------- */
-const avatarsOf = (g) => (g.avatars || []).map((h) => { const i = el("img", "av"); i.src = `avatars/${h}.jpg`; i.alt = ""; i.decoding = "async"; i.width = 150; i.height = 150; return i; });
+const avatarsOf = (g) => (g.avatars || []).map((h) => { const i = el("img", "av"); i.src = `/avatars/${h}.jpg`; i.alt = ""; i.decoding = "async"; i.width = 150; i.height = 150; return i; });
 const worklist = document.getElementById("worklist");
 if (worklist) {
   const cats = [...new Set(GROUPS.map((g) => g.cat))];
@@ -371,7 +371,7 @@ if (worklist) {
     for (const g of GROUPS.filter((x) => x.cat === cat)) {
       const li = el("li");
       const a = el("a", "wrow");
-      a.href = `client.html?c=${g.id}`;
+      a.href = `/work/${g.id}`;
       const avs = el("span", (g.avatars || []).length > 4 ? "wrow__avs wrow__avs--many" : "wrow__avs"); avs.append(...avatarsOf(g));
       a.append(avs, el("span", "wrow__name", g.name),
         el("span", "wrow__meta", reachOf(g) ? `${fmt(reachOf(g))} followers` : ""));
@@ -414,7 +414,10 @@ if (worklist && window.matchMedia("(hover: hover) and (pointer: fine)").matches
 /* ---------- Client page ---------- */
 const stage = document.getElementById("stage");
 if (stage) {
-  const id = new URLSearchParams(location.search).get("c");
+  // Address is /work/<id>. Old links (client.html?c=<id>) are moved to the new address.
+  const legacy = new URLSearchParams(location.search).get("c");
+  if (legacy) { location.replace(`/work/${legacy}`); }
+  const id = legacy || location.pathname.split("/").pop().replace(/\.html$/, "");
   const at = Math.max(0, GROUPS.findIndex((x) => x.id === id));
   const g = GROUPS[at];
   const list = items([g]);
@@ -473,11 +476,11 @@ if (stage) {
     if (r.local) {
       const v = el("video");
       v.controls = true; v.playsInline = true; v.preload = "none"; lock(v);
-      v.poster = `covers/${r.code}.jpg`; v.src = `videos/${r.code}.mp4`;
+      v.poster = `/covers/${r.code}.jpg`; v.src = `/videos/${r.code}.mp4`;
       v.addEventListener("play", () => document.querySelectorAll("video").forEach((o) => { if (o !== v) o.pause(); }));
       m.append(v);
     } else {
-      const img = el("img"); img.src = `covers/${r.code}.jpg`; img.alt = ""; m.append(img);
+      const img = el("img"); img.src = `/covers/${r.code}.jpg`; img.alt = ""; m.append(img);
     }
     return m;
   };
@@ -601,7 +604,7 @@ if (stage) {
   phone.addEventListener("change", place);
   const nx = GROUPS[(at + 1) % GROUPS.length];
   const n = document.getElementById("cnext");
-  n.href = `client.html?c=${nx.id}`;
+  n.href = `/work/${nx.id}`;
   n.querySelector("span").textContent = nx.name;
 }
 
@@ -643,6 +646,7 @@ if (form) {
       const out = await res.json().catch(() => ({}));
       if (!res.ok || String(out.success) !== "true") throw new Error(out.message || "send failed");
       form.hidden = true;
+      const heading = form.parentElement.querySelector(".label"); if (heading) heading.hidden = true;
       done.hidden = false;
       done.focus();
     } catch (err) {
@@ -653,23 +657,6 @@ if (form) {
       send.disabled = false; send.removeAttribute("aria-busy"); send.innerHTML = label;
     }
   });
-}
-
-/* ---------- Contact: booking calendar, loaded on demand so the page itself stays fast ---------- */
-const cal = document.getElementById("book");
-if (cal) {
-  let loaded = false;
-  const load = () => {
-    if (loaded) return; loaded = true;
-    const sc = document.createElement("script");
-    sc.src = "https://assets.calendly.com/assets/external/widget.js"; sc.async = true;
-    document.body.append(sc);
-  };
-  if ("IntersectionObserver" in window) {
-    const io = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) { load(); io.disconnect(); } }, { rootMargin: "300px" });
-    io.observe(cal);
-  } else { load(); }
-  document.querySelectorAll('a[href="#book"]').forEach((a) => a.addEventListener("click", load));
 }
 
 /* ---------- Letters that lean away from the cursor, everywhere on the site ----------
@@ -829,10 +816,4 @@ if (cal) {
     if (saved) return;
     root.dataset.theme = e.matches ? "dark" : "light"; sync();
   });
-})();
-
-/* ---------- One canonical address for search engines (both domains serve the same site) ---------- */
-(() => {
-  const link = document.querySelector('link[rel="canonical"]') || document.head.appendChild(Object.assign(document.createElement("link"), { rel: "canonical" }));
-  link.href = "https://hasibullahshanto.com" + location.pathname.replace(/index\.html$/, "") + location.search;
 })();
