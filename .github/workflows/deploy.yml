@@ -31,5 +31,21 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
-      - id: deployment
+      # GitHub Pages sometimes still holds the previous deploy for a minute or two ("in progress deployment").
+      # Try again after a pause instead of failing.
+      - id: first
         uses: actions/deploy-pages@v4
+        continue-on-error: true
+      - if: steps.first.outcome == 'failure'
+        run: sleep 90
+      - id: second
+        if: steps.first.outcome == 'failure'
+        uses: actions/deploy-pages@v4
+        continue-on-error: true
+      - if: steps.first.outcome == 'failure' && steps.second.outcome == 'failure'
+        run: sleep 180
+      - id: third
+        if: steps.first.outcome == 'failure' && steps.second.outcome == 'failure'
+        uses: actions/deploy-pages@v4
+      - id: deployment
+        run: echo "page_url=${{ steps.first.outputs.page_url || steps.second.outputs.page_url || steps.third.outputs.page_url }}" >> "$GITHUB_OUTPUT"
