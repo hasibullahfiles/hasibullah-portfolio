@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<script>
+  // Theme: the visitor's saved choice, else their system setting. Set before anything paints.
+  (() => {
+    let t = null; try { t = localStorage.getItem("theme"); } catch (e) {}
+    if (t !== "dark" && t !== "light") t = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    document.documentElement.dataset.theme = t;
+  })();
+</script>
+
+<title>Contact. Md Hasibullah</title>
+<meta name="description" content="Video editor and motion designer for Roberto P. Nickson, Tommy Geoco, Daniel Do, Artzen Media and more.">
+<meta property="og:title" content="Contact. Md Hasibullah">
+<meta property="og:description" content="Video editor and motion designer for Roberto P. Nickson, Tommy Geoco, Daniel Do, Artzen Media and more.">
+<meta property="og:type" content="website">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script>
+  // Blur transition only when the Gallery is one end of the navigation. Everything else is instant.
+  const isGallery = (u) => { const p = new URL(u, location.href).pathname; return p.endsWith("/") || p.endsWith("/index.html"); };
+  // Decide on the way out as well, so a non-Gallery hop never waits on a transition.
+  addEventListener("pageswap", (e) => {
+    if (!e.viewTransition) return;
+    for (const p of [e.viewTransition.ready, e.viewTransition.finished, e.viewTransition.updateCallbackDone]) if (p) p.catch(() => {});
+    const to = e.activation && e.activation.entry && e.activation.entry.url;
+    if (!(isGallery(location.href) || (to && isGallery(to)))) e.viewTransition.skipTransition();
+  });
+  addEventListener("pagereveal", (e) => {
+    if (!e.viewTransition) return;
+    const from = window.navigation && navigation.activation && navigation.activation.from;
+    const involves = isGallery(location.href) || (from && isGallery(from.url));
+    // Swallow the browser's "transition skipped" notices so they never show as errors.
+    e.viewTransition.ready.catch(() => {}); e.viewTransition.finished.catch(() => {});
+    if (!involves) e.viewTransition.skipTransition();
+  });
+</script>
+<script type="speculationrules">{"prerender":[{"where":{"href_matches":"/*"},"eagerness":"moderate"}],"prefetch":[{"where":{"href_matches":"/*"},"eagerness":"eager"}]}</script>
+</head>
+<body class="">
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav">
+  <a class="nav__name" href="index.html">HASIBULLAH</a>
+  <nav aria-label="Main">
+    <a href="index.html">Gallery</a>
+    <a href="work.html">Work</a>
+    <a href="about.html">About</a>
+    <a href="contact.html" aria-current="page">Contact</a>
+  </nav>
+</header>
+
+<main id="main" class="page page--contact">
+  <div class="contact__form">
+    <h2 class="label">Send a message</h2>
+  <h1 class="sr">Contact</h1>
+  <form class="form" id="brief" data-to="hasibullah@warmblu.com" novalidate>
+    <input type="text" name="name" placeholder="Name" aria-label="Name" autocomplete="name" required>
+    <input type="email" name="email" placeholder="Email" aria-label="Email" autocomplete="email" required>
+    <div class="tel">
+      <select name="dial" aria-label="Country code"><option value="+1">United States +1</option><option value="+44">United Kingdom +44</option><option value="+61">Australia +61</option><option value="+1">Canada +1</option><option value="+91">India +91</option><option disabled>──────────</option><option value="+54">Argentina +54</option><option value="+43">Austria +43</option><option value="+973">Bahrain +973</option><option value="+880">Bangladesh +880</option><option value="+32">Belgium +32</option><option value="+55">Brazil +55</option><option value="+86">China +86</option><option value="+57">Colombia +57</option><option value="+45">Denmark +45</option><option value="+20">Egypt +20</option><option value="+33">France +33</option><option value="+49">Germany +49</option><option value="+852">Hong Kong +852</option><option value="+62">Indonesia +62</option><option value="+353">Ireland +353</option><option value="+39">Italy +39</option><option value="+81">Japan +81</option><option value="+254">Kenya +254</option><option value="+965">Kuwait +965</option><option value="+60">Malaysia +60</option><option value="+52">Mexico +52</option><option value="+977">Nepal +977</option><option value="+31">Netherlands +31</option><option value="+64">New Zealand +64</option><option value="+234">Nigeria +234</option><option value="+47">Norway +47</option><option value="+968">Oman +968</option><option value="+92">Pakistan +92</option><option value="+63">Philippines +63</option><option value="+48">Poland +48</option><option value="+351">Portugal +351</option><option value="+974">Qatar +974</option><option value="+966">Saudi Arabia +966</option><option value="+65">Singapore +65</option><option value="+27">South Africa +27</option><option value="+82">South Korea +82</option><option value="+34">Spain +34</option><option value="+94">Sri Lanka +94</option><option value="+46">Sweden +46</option><option value="+41">Switzerland +41</option><option value="+66">Thailand +66</option><option value="+90">Turkey +90</option><option value="+971">United Arab Emirates +971</option><option value="+58">Venezuela +58</option><option value="+84">Vietnam +84</option></select>
+      <input type="tel" name="whatsapp" placeholder="WhatsApp number" aria-label="WhatsApp number" autocomplete="tel-national" inputmode="tel">
+    </div>
+
+    <fieldset>
+      <legend>What you need</legend>
+      <label class="opt"><input type="radio" name="need" value="Short-form edit"><span>Short-form edit</span></label>
+      <label class="opt"><input type="radio" name="need" value="Podcast clips"><span>Podcast clips</span></label>
+      <label class="opt"><input type="radio" name="need" value="Podcast intro"><span>Podcast intro</span></label>
+      <label class="opt"><input type="radio" name="need" value="Launch video"><span>Launch video</span></label>
+      <label class="opt"><input type="radio" name="need" value="Motion graphics"><span>Motion graphics</span></label>
+      <label class="opt"><input type="radio" name="need" value="Other"><span>Other</span></label>
+    </fieldset>
+
+    <textarea name="brief" rows="3" placeholder="Tell me about your project" aria-label="Tell me about your project" required></textarea>
+
+    <p class="form__error" id="form-error" role="alert" hidden>Add your name, email and a line about the project.</p>
+    <p class="actions">
+      <button class="btn" type="submit">Send message</button>
+    </p>
+  </form>
+  <p class="links links--contact links--icons">
+    <a class="soc" href="https://www.instagram.com/hasibullah_shanto/" target="_blank" rel="noopener" aria-label="Instagram"><img class="ico" src="icons/instagram.svg" alt="" width="16" height="16"></a>
+    <a class="soc" href="https://wa.me/8801846060517" target="_blank" rel="noopener" aria-label="WhatsApp"><img class="ico" src="icons/whatsapp.svg" alt="" width="16" height="16"></a>
+    <a class="soc" href="mailto:hasibullah@warmblu.com" aria-label="Email"><img class="ico" src="icons/email.svg" alt="" width="16" height="16"></a>
+  </p>
+  </div>
+  <section class="contact__book" aria-labelledby="book-title">
+    <h2 class="label" id="book-title">Book a call</h2>
+    <div class="calendly-inline-widget" id="book" data-url="https://calendly.com/hasibullah-warmblu/30min?hide_event_type_details=1&hide_landing_page_details=1&hide_gdpr_banner=1&background_color=ffffff&text_color=111111&primary_color=111111"></div>
+    <noscript><p><a class="u" href="https://calendly.com/hasibullah-warmblu/30min">Open the booking calendar</a></p></noscript>
+  </section>
+</main>
+
+<footer class="foot">Hasibullah ©2026</footer>
+
+<button class="theme" id="theme" type="button" role="switch" aria-checked="false" aria-label="Dark mode"></button>
+<script src="main.js"></script>
+</body>
+</html>

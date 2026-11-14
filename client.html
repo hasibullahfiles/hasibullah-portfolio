@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<script>
+  // Theme: the visitor's saved choice, else their system setting. Set before anything paints.
+  (() => {
+    let t = null; try { t = localStorage.getItem("theme"); } catch (e) {}
+    if (t !== "dark" && t !== "light") t = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    document.documentElement.dataset.theme = t;
+  })();
+</script>
+
+<title>Work. Md Hasibullah</title>
+<meta name="description" content="Video editor and motion designer for Roberto P. Nickson, Tommy Geoco, Daniel Do, Artzen Media and more.">
+<meta property="og:title" content="Work. Md Hasibullah">
+<meta property="og:description" content="Video editor and motion designer for Roberto P. Nickson, Tommy Geoco, Daniel Do, Artzen Media and more.">
+<meta property="og:type" content="website">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script>
+  // Blur transition only when the Gallery is one end of the navigation. Everything else is instant.
+  const isGallery = (u) => { const p = new URL(u, location.href).pathname; return p.endsWith("/") || p.endsWith("/index.html"); };
+  // Decide on the way out as well, so a non-Gallery hop never waits on a transition.
+  addEventListener("pageswap", (e) => {
+    if (!e.viewTransition) return;
+    for (const p of [e.viewTransition.ready, e.viewTransition.finished, e.viewTransition.updateCallbackDone]) if (p) p.catch(() => {});
+    const to = e.activation && e.activation.entry && e.activation.entry.url;
+    if (!(isGallery(location.href) || (to && isGallery(to)))) e.viewTransition.skipTransition();
+  });
+  addEventListener("pagereveal", (e) => {
+    if (!e.viewTransition) return;
+    const from = window.navigation && navigation.activation && navigation.activation.from;
+    const involves = isGallery(location.href) || (from && isGallery(from.url));
+    // Swallow the browser's "transition skipped" notices so they never show as errors.
+    e.viewTransition.ready.catch(() => {}); e.viewTransition.finished.catch(() => {});
+    if (!involves) e.viewTransition.skipTransition();
+  });
+</script>
+<script type="speculationrules">{"prerender":[{"where":{"href_matches":"/*"},"eagerness":"moderate"}],"prefetch":[{"where":{"href_matches":"/*"},"eagerness":"eager"}]}</script>
+</head>
+<body class="">
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav">
+  <a class="nav__name" href="index.html">HASIBULLAH</a>
+  <nav aria-label="Main">
+    <a href="index.html">Gallery</a>
+    <a href="work.html" aria-current="page">Work</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</header>
+
+<main id="main" class="page project">
+  <aside class="project__text">
+    <div class="pavs" id="cavs"></div>
+    <h1 id="cname"></h1>
+    <div class="reach" id="cfacts"></div>
+    <p class="socials" id="csocials"></p>
+    <div class="pnames" id="cnames"></div>
+    <div class="now" id="now" aria-live="polite">
+      <p class="now__note" id="nownote" hidden></p>
+      <p class="now__stats" id="nowstats"></p>
+    </div>
+    <p class="project__contact"><a class="btn" href="contact.html">Request now</a></p>
+  </aside>
+  <div class="project__media">
+    <div id="stage"></div>
+    <p class="soon" id="soon" hidden></p>
+    <p class="project__next"><a id="cnext" href="work.html">Next <span></span></a><a href="work.html">All work</a></p>
+  </div>
+</main>
+
+<footer class="foot">Hasibullah ©2026</footer>
+
+<script src="media.js"></script>
+<script src="notes.js"></script>
+<button class="theme" id="theme" type="button" role="switch" aria-checked="false" aria-label="Dark mode"></button>
+<script src="main.js"></script>
+</body>
+</html>

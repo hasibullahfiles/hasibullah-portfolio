@@ -1,0 +1,92 @@
+<!doctype html>
+<!-- DESIGN BRIEF
+Direction: premium restraint. The owner asked to follow the structure and typography of his
+  reference, cordia.studio: a white room where the work is the only colour. Home is an endless
+  canvas of his videos that you drag around one quiet sentence; Work is a set of client boxes
+  that open into each client's videos; About and Contact are narrow, almost text-only pages.
+  Written from scratch, with his content.
+Color: #ffffff ground (the videos supply all the colour), ink #111111, one grey #8f8f8f for
+  secondary text, hairlines #ececec. The only accent is the green availability dot.
+Type: Inter 400/500 with slightly tight tracking. A stated decision: the owner asked for the
+  reference's typography, a plain Swiss neo-grotesk at small sizes, and Inter is the closest
+  open face. No display face, because it would compete with the videos.
+Layout: home leads with the famous faces. Roberto P. Nickson is the biggest client, so his
+  videos are double size and repeat. Work is grouped by client, each box showing the client's
+  own profile picture. Rounded option buttons on Contact are working controls.
+Signature moment: the home canvas. Grab it anywhere and it moves, with no edge in any direction.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<script>
+  // Theme: the visitor's saved choice, else their system setting. Set before anything paints.
+  (() => {
+    let t = null; try { t = localStorage.getItem("theme"); } catch (e) {}
+    if (t !== "dark" && t !== "light") t = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    document.documentElement.dataset.theme = t;
+  })();
+</script>
+
+<title>Gallery. Md Hasibullah</title>
+<meta name="description" content="Video editor and motion designer for Roberto P. Nickson, Tommy Geoco, Daniel Do, Artzen Media and more.">
+<meta property="og:title" content="Gallery. Md Hasibullah">
+<meta property="og:description" content="Video editor and motion designer for Roberto P. Nickson, Tommy Geoco, Daniel Do, Artzen Media and more.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="og.jpg">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script>
+  // Blur transition only when the Gallery is one end of the navigation. Everything else is instant.
+  const isGallery = (u) => { const p = new URL(u, location.href).pathname; return p.endsWith("/") || p.endsWith("/index.html"); };
+  // Decide on the way out as well, so a non-Gallery hop never waits on a transition.
+  addEventListener("pageswap", (e) => {
+    if (!e.viewTransition) return;
+    for (const p of [e.viewTransition.ready, e.viewTransition.finished, e.viewTransition.updateCallbackDone]) if (p) p.catch(() => {});
+    const to = e.activation && e.activation.entry && e.activation.entry.url;
+    if (!(isGallery(location.href) || (to && isGallery(to)))) e.viewTransition.skipTransition();
+  });
+  addEventListener("pagereveal", (e) => {
+    if (!e.viewTransition) return;
+    const from = window.navigation && navigation.activation && navigation.activation.from;
+    const involves = isGallery(location.href) || (from && isGallery(from.url));
+    // Swallow the browser's "transition skipped" notices so they never show as errors.
+    e.viewTransition.ready.catch(() => {}); e.viewTransition.finished.catch(() => {});
+    if (!involves) e.viewTransition.skipTransition();
+  });
+</script>
+<script type="speculationrules">{"prerender":[{"where":{"href_matches":"/*"},"eagerness":"moderate"}],"prefetch":[{"where":{"href_matches":"/*"},"eagerness":"eager"}]}</script>
+</head>
+<body class="is-home">
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav">
+  <a class="nav__name" href="index.html" aria-current="page">Gallery</a>
+  <nav aria-label="Main">
+    <a href="work.html">Work</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</header>
+
+<main id="main" class="home" tabindex="-1">
+  <div class="canvas" id="canvas" aria-label="Videos edited by Md Hasibullah. Drag to move around."></div>
+  <h1 class="sr">Gallery. Videos edited by Md Hasibullah.</h1>
+</main>
+
+<div class="glow glow--tl" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+<div class="glow glow--tr" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+<div class="glow glow--bl" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+<p class="home__copy">Hasibullah ©2026</p>
+
+<script src="media.js"></script>
+<script src="notes.js"></script>
+<button class="theme" id="theme" type="button" role="switch" aria-checked="false" aria-label="Dark mode"></button>
+<script src="main.js"></script>
+</body>
+</html>
