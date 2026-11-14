@@ -133,7 +133,7 @@ const MESSAGES = {
   // Gian Macrobio (Aliens Create) sent a video testimonial (6 Apr 2026).
   gian: [
     { from: "Gian Macrobio", avatar: "alienscreate", date: "1 Mar 2026", text: "Thank you brooo you are a killer 🔥" },
-    { from: "Gian Macrobio", avatar: "alienscreate", date: "6 Apr 2026", video: "/videos/gian-testimonial.mp4", poster: "/covers/gian-testimonial.jpg" },
+    { from: "Gian Macrobio", avatar: "alienscreate", date: "6 Apr 2026", video: "https://videos.hasibullahshanto.com/v1/gian-testimonial.mp4", poster: "/covers/gian-testimonial.jpg" },
     { from: "Gian Macrobio", avatar: "alienscreate", date: "6 Apr 2026", text: "I've been working with Hasibullah for already like six months, and the work he's doing is extremely, extremely good. I'm a video producer, so sometimes I need too much help with editing, and he's the man. He's the guy." },
     { from: "Gian Macrobio", avatar: "alienscreate", date: "6 Apr 2026", text: "My clients are very happy, and it's awesome. He always responds fast. He works very fast. He works professional. Everything. So I 100% recommend Hasibullah." },
     { from: "Gian Macrobio", avatar: "alienscreate", date: "8 Apr 2026", text: "Top notch!" },
@@ -164,6 +164,10 @@ const BIG = new Set(["DVg-_5giapC", "DW4X4aAiRFF", "DWsICUqCcpT", "DVeGTOBkWaC",
 const FORCE_WIDE = new Set([]);
 
 const LOCAL = typeof MEDIA === "undefined" ? {} : MEDIA;
+// Full-quality (1080p) files are served from Cloudflare R2, close to US viewers. The light 540p copies in
+// /videos/ stay on this site for the Gallery's hover previews.
+const HQ = "https://videos.hasibullahshanto.com/v1/";
+const hqOf = (code) => `${HQ}${code}.mp4`;
 // Each video's own caption (first line), generated into notes.js. NOTES above wins when you write your own.
 const CAPS = typeof CAPTIONS === "undefined" ? {} : CAPTIONS;
 const noteOf = (code) => NOTES[code] || CAPS[code] || "";
@@ -331,7 +335,7 @@ function openPlayer(r) {
     player.addEventListener("click", (e) => { if (e.target === player || e.target.classList.contains("player__in")) player.close(); });
   }
   const v = player.querySelector("video");
-  v.src = `/videos/${r.code}.mp4`;
+  v.src = hqOf(r.code);
   v.poster = `/covers/${r.code}.jpg`;
   const [a, b, c] = player.querySelector(".player__meta").children;
   a.textContent = r.who;
@@ -762,7 +766,7 @@ if (stage) {
     if (r.local) {
       const v = el("video");
       v.controls = true; v.playsInline = true; v.preload = "none"; lock(v);
-      v.poster = `/covers/${r.code}.jpg`; v.src = `/videos/${r.code}.mp4`;
+      v.poster = `/covers/${r.code}.jpg`; v.src = hqOf(r.code);
       v.addEventListener("play", () => { document.querySelectorAll("audio, video").forEach((o) => { if (o !== v) o.pause(); }); setUrl(r); });
       m.append(v);
     } else {

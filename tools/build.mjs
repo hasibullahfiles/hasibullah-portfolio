@@ -67,7 +67,7 @@ for (const g of GROUPS) {
     const size = MEDIA[code];
     let html = page(who, d, `/work/${g.id}/${code}`);
     let tags = `<meta property="og:image" content="${SITE}/covers/${code}.jpg">\n<meta property="og:image:alt" content="${esc(`Cover of a video edited for ${who}`)}">`;
-    if (size) tags += `\n<meta property="og:video" content="${SITE}/videos/${code}.mp4">\n<meta property="og:video:type" content="video/mp4">\n<meta property="og:video:width" content="${size[0]}">\n<meta property="og:video:height" content="${size[1]}">`;
+    if (size) tags += `\n<meta property="og:video" content="https://videos.hasibullahshanto.com/v1/${code}.mp4">\n<meta property="og:video:type" content="video/mp4">\n<meta property="og:video:width" content="${size[0]}">\n<meta property="og:video:height" content="${size[1]}">`;
     html = meta(OG_DEFAULT, html, tags);
     html = html.replace(/<meta name="twitter:image" content="[^"]*">/, `<meta name="twitter:image" content="${SITE}/covers/${code}.jpg">`);
     html = html.replace('<meta property="og:type" content="website">', `<meta property="og:type" content="${size ? "video.other" : "website"}">`);
