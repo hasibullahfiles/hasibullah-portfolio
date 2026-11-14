@@ -633,7 +633,7 @@ if (form) {
       "What they need": d.get("need") || "Not chosen", Project: d.get("brief"),
       Page: location.href,
     };
-    send.disabled = true; send.dataset.label = send.dataset.label || send.textContent; send.textContent = "Sending";
+    const label = send.innerHTML; send.disabled = true; send.setAttribute("aria-busy", "true"); send.textContent = "Sending";
     try {
       const res = await fetch(`https://formsubmit.co/ajax/${to}`, {
         method: "POST",
@@ -650,7 +650,7 @@ if (form) {
       const body = Object.entries(fields).map(([k, v]) => `${k}: ${v}`).join("\n");
       window.location.href = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     } finally {
-      send.disabled = false; send.textContent = send.dataset.label;
+      send.disabled = false; send.removeAttribute("aria-busy"); send.innerHTML = label;
     }
   });
 }
