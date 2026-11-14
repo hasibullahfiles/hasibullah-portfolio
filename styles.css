@@ -234,7 +234,7 @@ body:not(.is-home) .nav { background: var(--bg); }
 .now__name { font-size: 1rem; }
 .now__note { color: var(--ink); font-size: 0.875rem; line-height: 1.45; max-width: 34ch; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 .project__media { min-width: 0; }
-.m video[controls] { pointer-events: auto; }
+.m video[controls], .m video.has-controls { pointer-events: auto; }
 
 /* Cover-flow carousel: current video centred, the rest stepping back at the sides */
 .car { --h: min(calc(100dvh - 250px), 800px); }
@@ -760,3 +760,44 @@ body:not(.is-built) .project__text, body:not(.is-built) .project__media { visibi
 /* Comfortable tap areas for the platform icons under a video (24px) without changing how they look. */
 .stats__link { padding: 5px; margin: -5px -2px; }
 @media (max-width: 700px) { .car__dots { gap: 14px; } }
+
+.tmon__voices { display: contents; }
+.tmon__voices + .msg { margin-top: 12px; }
+
+/* ---------- Phones: calmer client pages and Gallery ---------- */
+@media (max-width: 700px) {
+  /* Header in one tight row: picture, then name with the follower count under it. The video starts higher. */
+  .project__text { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 14px; align-items: center; margin-bottom: 4px; }
+  .project__text > * { grid-column: 1 / -1; }
+  .project__text .pavs:not(.pavs--many) { grid-column: 1; grid-row: 1 / span 2; margin-bottom: 0; }
+  .project__text .pavs:not(.pavs--many) .av { width: 56px; height: 56px; }
+  .project__text .pavs:not(.pavs--many) ~ h1 { grid-column: 2; align-self: end; }
+  .project__text .pavs:not(.pavs--many) ~ .reach { grid-column: 2; align-self: start; margin-top: 2px; }
+  .project__text .pavs--many { margin-bottom: 12px; }
+  .project__text .pavs--many .av { width: 44px; height: 44px; }
+  .project__text .pavs--many ~ .reach { margin-top: 4px; }
+  .project__text h1 { font-size: 1.25rem; }
+  .project__text .reach__total { font-size: 0.8125rem; }
+  .project__text .reach__total strong { font-size: 0.9375rem; letter-spacing: -0.01em; margin-right: 4px; }
+  .project__text .reach__total--second { margin-top: 2px; }
+  .project__text .socials { margin-top: 14px; }
+  .project__text .soc { width: 36px; height: 36px; }
+  /* Testimonials: one row you swipe sideways, in place of a long stack. */
+  .project__media .tmon { display: flex; align-items: flex-start; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
+    margin: 28px calc(-1 * var(--gutter)) 0; padding: 0 var(--gutter) 2px; }
+  .project__media .tmon::-webkit-scrollbar { display: none; }
+  .project__media .tmon > * { flex: 0 0 84%; scroll-snap-align: center; margin-top: 0; }
+  .project__media .tmon > :only-child { flex-basis: 100%; }
+  .project__media .tmon__voices { display: grid; gap: 4px; }
+  /* Gallery notes: the name on one line, no date, so the card stays short. */
+  .canvas .msg { padding: 10px 12px; gap: 8px; grid-template-columns: 26px minmax(0, 1fr); }
+  .canvas .msg__av { width: 26px; height: 26px; }
+  .canvas .msg__head time { display: none; }
+  .canvas .msg__head strong { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .canvas .msg__text { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+}
+/* Phones: off the Gallery, the light/dark switch sits under the footer and no longer floats over videos and buttons. */
+@media (max-width: 700px) {
+  body:not(.is-home) .theme { position: static; display: block; margin: 0 auto calc(28px + env(safe-area-inset-bottom)); }
+  body:not(.is-home) .foot { padding-bottom: 18px; }
+}

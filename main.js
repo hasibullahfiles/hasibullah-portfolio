@@ -198,6 +198,7 @@ const byCode = new Map(ALL.map((r) => [r.code, r]));
 // Viewers can play, pause, change volume and speed, and go full screen, but not download.
 // While a video plays, its controls show on any pointer movement or tap and fade out after 1.5 s of stillness.
 const lock = (v) => {
+  v.classList.add("has-controls");   // keeps taps reaching the video while its controls are hidden
   v.setAttribute("controlsList", "nodownload noremoteplayback");
   v.disablePictureInPicture = true;
   v.addEventListener("contextmenu", (e) => e.preventDefault());
@@ -211,8 +212,9 @@ const lock = (v) => {
   v.addEventListener("pointermove", wake, { passive: true });
   v.addEventListener("pointerdown", (e) => {
     // With the controls hidden, a tap or click shows them instead of passing through to nothing.
-    if (!v.controls) { e.preventDefault(); wake(); }
+    if (!v.controls) { e.preventDefault(); v._justWoke = true; wake(); }
   });
+  v.addEventListener("click", (e) => { if (v._justWoke) { v._justWoke = false; e.preventDefault(); e.stopPropagation(); } }, true);
   v.addEventListener("pause", () => { clearTimeout(idle); v.controls = true; });
   v.addEventListener("ended", () => { clearTimeout(idle); v.controls = true; });
   return v;
@@ -727,7 +729,7 @@ if (stage) {
   const msgs = MESSAGES[g.id] || [];
   if (tbox && (voices.length || msgs.length)) {
     tbox.hidden = false;
-    voices.forEach((v) => tbox.append(voiceBubble(v, g)));
+    if (voices.length) { const vg = el("div", "tmon__voices"); voices.forEach((v) => vg.append(voiceBubble(v, g))); tbox.append(vg); }   // one group, so phones can show it as a single swipe card
     msgs.forEach((m) => tbox.append(messageCard(m, g)));
   }
   // Combined audience across the client's platforms (one number, no per-platform split).
