@@ -111,6 +111,28 @@ function stats(r) {
   return s;
 }
 
+/* ---------- Every video has its own address: /work/<client>/<Instagram code> ---------- */
+const linkOf = (r) => `/work/${r.group.id}/${r.code}`;
+const SHARE_ORIGIN = "https://hasibullahshanto.com";
+// Copies the video's link (or opens the phone's share sheet) and says so on the button for a moment.
+async function shareVideo(r, btn) {
+  const url = SHARE_ORIGIN + linkOf(r);
+  const say = (t) => { const was = btn.dataset.label || btn.textContent; btn.dataset.label = was; btn.textContent = t; clearTimeout(btn._t); btn._t = setTimeout(() => { btn.textContent = was; }, 1600); };
+  try {
+    if (navigator.share && window.matchMedia("(pointer: coarse)").matches) { await navigator.share({ title: r.who, url }); return; }
+    await navigator.clipboard.writeText(url);
+    say("Link copied");
+  } catch (e) {
+    if (e && e.name === "AbortError") return;
+    window.prompt("Copy this link", url);
+  }
+}
+const shareButton = (getVideo) => {
+  const b = el("button", "share", "Copy link"); b.type = "button";
+  b.addEventListener("click", () => shareVideo(getVideo(), b));
+  return b;
+};
+
 /* ---------- Player ---------- */
 let player;
 function openPlayer(r) {
@@ -121,6 +143,14 @@ function openPlayer(r) {
     lock(player.querySelector("video"));
     const stop = () => { const v = player.querySelector("video"); v.pause(); v.removeAttribute("src"); v.load(); };
     player.addEventListener("close", stop);
+    // Closing the player returns the address (and the tab title) to the page underneath.
+    player.addEventListener("close", () => {
+      document.title = player._title || document.title;
+      if (history.state && history.state.video) history.back();
+    });
+    window.addEventListener("popstate", () => { if (player.open && !(history.state && history.state.video)) player.close(); });
+    const share = shareButton(() => player._video);
+    player.querySelector(".player__meta").append(share);
     player.querySelector(".player__close").addEventListener("click", () => player.close());
     player.addEventListener("click", (e) => { if (e.target === player || e.target.classList.contains("player__in")) player.close(); });
   }
@@ -133,6 +163,14 @@ function openPlayer(r) {
   c.textContent = `More from ${r.group.name}`;
   c.href = `/work/${r.group.id}`;
   c.removeAttribute("target");
+  // The address bar shows this video's own link while it plays, so it can be copied and sent as is.
+  player._video = r;
+  if (!player.open) player._title = document.title;
+  document.title = r.who;
+  if (location.pathname !== linkOf(r)) {
+    if (history.state && history.state.video) history.replaceState({ video: r.code }, "", linkOf(r));
+    else history.pushState({ video: r.code }, "", linkOf(r));
+  }
   player.showModal();
   v.play().catch(() => {});
 }
@@ -366,6 +404,7 @@ if (worklist) {
   const cats = [...new Set(GROUPS.map((g) => g.cat))];
   for (const cat of cats) {
     const sec = el("section", "wsec");
+    sec.id = cat.toLowerCase().replace(/[^a-z0-9]+/g, "-");
     sec.append(el("h2", "label", cat));
     const ul = el("ul", "wlist");
     for (const g of GROUPS.filter((x) => x.cat === cat)) {
@@ -379,6 +418,9 @@ if (worklist) {
     }
     sec.append(ul); worklist.append(sec);
   }
+  // The sections are drawn by this script, so jump to /work#<section> once they exist.
+  const target = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+  if (target) target.scrollIntoView();
 }
 
 // Proximity effect on the Work list: rows grow as the cursor nears them and lean towards it.
@@ -417,10 +459,22 @@ if (stage) {
   // Address is /work/<id>. Old links (client.html?c=<id>) are moved to the new address.
   const legacy = new URLSearchParams(location.search).get("c");
   if (legacy) { location.replace(`/work/${legacy}`); }
-  const id = legacy || location.pathname.split("/").pop().replace(/\.html$/, "");
+  const seg = location.pathname.replace(/\.html$/, "").split("/").filter(Boolean);
+  const id = legacy || (seg[0] === "work" ? seg[1] : seg[seg.length - 1]);
+  // /work/<client>/<code> opens on that video.
+  const wantCode = seg[0] === "work" && seg[2] && seg[2] !== "index" ? seg[2] : null;
   const at = Math.max(0, GROUPS.findIndex((x) => x.id === id));
   const g = GROUPS[at];
   const list = items([g]);
+  const start = Math.max(0, list.findIndex((r) => r.code === wantCode));
+  // Keep the address on the video in view (replace, not push, so Back still leaves the page).
+  let urlReady = false;
+  const setUrl = (r) => {
+    if (!urlReady || location.pathname === linkOf(r)) return;
+    history.replaceState(null, "", linkOf(r));
+    document.title = r.who;
+  };
+  let current = list[start];
   document.title = g.name;
   document.getElementById("cname").textContent = g.name;
   const avBox = document.getElementById("cavs");
@@ -463,12 +517,16 @@ if (stage) {
   // Details of the video currently in the centre.
   const now = { note: document.getElementById("nownote"), stats: document.getElementById("nowstats") };
   const showNow = (r) => {
+    current = r;
     now.note.textContent = noteOf(r.code);
     now.note.hidden = !noteOf(r.code);
     now.stats.replaceChildren(stats(r));
     nameEls.forEach((b, n) => b.setAttribute("aria-current", n === r.who ? "true" : "false"));
   };
-  if (list.length) showNow(list[0]); else document.getElementById("now").hidden = true;
+  if (list.length) {
+    showNow(list[start]);
+    document.getElementById("now").append(shareButton(() => current));
+  } else document.getElementById("now").hidden = true;
 
   // One inline video. Starting one pauses any other.
   const media = (r) => {
@@ -477,7 +535,7 @@ if (stage) {
       const v = el("video");
       v.controls = true; v.playsInline = true; v.preload = "none"; lock(v);
       v.poster = `/covers/${r.code}.jpg`; v.src = `/videos/${r.code}.mp4`;
-      v.addEventListener("play", () => document.querySelectorAll("video").forEach((o) => { if (o !== v) o.pause(); }));
+      v.addEventListener("play", () => { document.querySelectorAll("video").forEach((o) => { if (o !== v) o.pause(); }); setUrl(r); });
       m.append(v);
     } else {
       const img = el("img"); img.src = `/covers/${r.code}.jpg`; img.alt = ""; m.append(img);
@@ -493,10 +551,13 @@ if (stage) {
       const text = el("div", "lrow__text");
       text.append(el("h2", null, r.who));
       if (NOTES[r.code]) text.append(el("p", "lrow__note", NOTES[r.code]));
-      text.append(stats(r));
+      text.append(stats(r), shareButton(() => r));
+      row.id = r.code;
       row.append(text, media(r));
       stage.append(row);
     }
+    if (wantCode && document.getElementById(wantCode)) requestAnimationFrame(() => document.getElementById(wantCode).scrollIntoView({ block: "center" }));
+    urlReady = true;
   } else if (list.length) {
     // Cover-flow carousel: the current video sits in the centre at full size,
     // the others step back on either side. Every video can be brought to the centre.
@@ -556,6 +617,7 @@ if (stage) {
         });
         dotEls.forEach((d, i) => d.setAttribute("aria-current", i === cur ? "true" : "false"));
         showNow(list[cur]);
+        setUrl(list[cur]);
       }
       prev.disabled = cur === 0; next.disabled = cur === slides.length - 1;
     };
@@ -587,9 +649,13 @@ if (stage) {
       car.style.setProperty("--edge", `${Math.max(0, Math.min(210, room)).toFixed(0)}px`);
     };
     const layout = () => { pad(); fitEdges(); paint(); };
+    // Open on the video named in the address (no animation), then let the address follow the carousel.
+    const jumpToStart = () => { if (start) { want = start; track.scrollLeft = mid(slides[start]) - track.clientWidth / 2; } paint(); };
     layout();
+    jumpToStart();
     window.addEventListener("resize", layout);
-    window.addEventListener("load", layout);
+    window.addEventListener("load", () => { layout(); if (!urlReady) jumpToStart(); urlReady = true; }, { once: true });
+    if (document.readyState === "complete") urlReady = true;
   }
   if (g.soon) { const so = document.getElementById("soon"); so.textContent = g.soon; so.hidden = false; }
   // On phones the caption, views and the button follow the video, so they stay in view while swiping.
@@ -816,4 +882,36 @@ if (form) {
     if (saved) return;
     root.dataset.theme = e.matches ? "dark" : "light"; sync();
   });
+})();
+
+/* ---------- About: Md's photo follows the cursor while it is over his name ----------
+   It grows out of the cursor, trails it on a soft spring with a slight tilt in the direction of travel,
+   and shrinks back into the cursor on leave. Pointer devices only; no movement under reduced motion. */
+(() => {
+  const name = document.querySelector(".hover-me");
+  if (!name || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+  const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const img = el("img", "cursor-photo");
+  img.src = "/avatars/hasibullah_shanto.jpg"; img.alt = ""; img.setAttribute("aria-hidden", "true"); img.decoding = "async";
+  document.body.append(img);
+  let tx = 0, ty = 0, x = 0, y = 0, show = 0, want = 0, tilt = 0, raf = 0;
+  const frame = () => {
+    const follow = still ? 1 : 0.16;
+    x += (tx - x) * follow; y += (ty - y) * follow;
+    show += (want - show) * (want ? 0.12 : 0.16);
+    tilt += ((still ? 0 : Math.max(-14, Math.min(14, (tx - x) * 0.3))) - tilt) * 0.2;
+    const ease = show * show * (3 - 2 * show);                 // smoothstep: a soft start and a soft landing
+    img.style.opacity = ease.toFixed(3);
+    img.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) translate(-50%, calc(-100% - 14px)) rotate(${tilt.toFixed(2)}deg) scale(${still ? 1 : (0.35 + 0.65 * ease).toFixed(3)})`;
+    const moving = Math.abs(tx - x) > 0.2 || Math.abs(ty - y) > 0.2 || Math.abs(want - show) > 0.003 || Math.abs(tilt) > 0.05;
+    raf = moving ? requestAnimationFrame(frame) : 0;
+  };
+  const run = () => { if (!raf) raf = requestAnimationFrame(frame); };
+  name.addEventListener("pointerenter", (e) => {
+    if (show < 0.03) { x = tx = e.clientX; y = ty = e.clientY; }   // appear from where the cursor is
+    want = 1; run();
+  });
+  name.addEventListener("pointermove", (e) => { tx = e.clientX; ty = e.clientY; run(); });
+  name.addEventListener("pointerleave", () => { want = 0; run(); });
+  window.addEventListener("scroll", () => { if (want) { want = 0; run(); } }, { passive: true });
 })();

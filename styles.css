@@ -646,3 +646,18 @@ html { background: var(--bg); }
 .linklist { list-style: none; padding: 0; margin: 32px 0 0; width: 100%; display: grid; gap: 10px; }
 .linklist .btn { display: block; width: 100%; padding: 15px 18px; text-align: center; }
 .links--center { justify-content: center; margin-top: 28px; }
+
+/* Copy link: a quiet text button under a video's details (and in the Gallery player) */
+.share { display: inline-block; font: inherit; font-size: 0.8125rem; letter-spacing: inherit; color: var(--muted); background: none; border: 0; padding: 8px 0; margin-top: 6px; cursor: pointer; transition: color 160ms ease; }
+.player__meta .share { color: inherit; opacity: 0.7; margin: 0; padding: 0; }
+@media (hover: hover) and (pointer: fine) { .share:hover { color: var(--ink); } .player__meta .share:hover { opacity: 1; color: inherit; } }
+.now .share, .lrow .share { display: block; width: fit-content; text-align: left; padding-left: 0; padding-right: 0; }
+.wsec, .page--narrow section { scroll-margin-top: 90px; }
+
+/* About: the photo that follows the cursor over Md's name (moved by main.js) */
+.hover-me { cursor: default; }
+.cursor-photo {
+  position: fixed; left: 0; top: 0; z-index: 60; width: 112px; height: 112px; border-radius: 50%; object-fit: cover;
+  pointer-events: none; opacity: 0; transform-origin: 50% 100%; will-change: transform, opacity;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.18);
+}
