@@ -11,8 +11,8 @@ const GROUPS = [
     videos: [["DfC3_uyAuWY", 159000], ["Dc_mgAvu1sw", 31000], ["DcyrXDSJNMK", 30800], ["Dd_95hIJXv1", 11800], ["Dc4iVrPhb7p", 8747], ["DdGk0maRsas", 8059], ["Dcgy5iihDyn", 7737]] },
   { id: "daniel-do", cat: "Creators", name: "Daniel Do", handle: "justdodani", reach: { instagram: 287000, tiktok: 213200 }, avatars: ["justdodani"],
     videos: [["DOb2Co7jLV3", 173000], ["DZdEccwMUZw", 146000], ["DOjJJ_jjMEQ", 46700], ["DZI0BsiswX9", 15600], ["DYutfBTsURH", 14700], ["DN8Rv9wDDeI", 13800]] },
-  { id: "creators", group: true, cat: "Creators", name: "More creators", reach: { instagram: 538862 }, avatars: ["artzenmedia", "marisa", "shootsroman", "hasnatcreates", "ossa.ai", "saturate.be"],
-    videos: [["DeBvhCLy_g9", 556000, "Ben Aizen"], ["De-2bbIv9ys", 90900, "Roman"], ["o8S4qdbACLA", null, "Marisa", "https://www.youtube.com/shorts/o8S4qdbACLA"], ["DVqc2B1AfKr", 2432, "Md Arif Hasnat"], ["DFYYiZxNKpO", 831000, "Cole Gonzales"], ["DWWwD1MjXKq", 5926, "Saturate"]] },
+  { id: "creators", group: true, cat: "Creators", name: "More creators", reach: { instagram: 538862 }, avatars: ["artzenmedia", "marisa", "shootsroman", "baurrovski", "hasnatcreates", "ossa.ai", "saturate.be"],
+    videos: [["DeBvhCLy_g9", 556000, "Ben Aizen"], ["De-2bbIv9ys", 90900, "Roman"], ["DRy81QPkrN1", 17900, "Baurjan Tulegenov"],["o8S4qdbACLA", null, "Marisa", "https://www.youtube.com/shorts/o8S4qdbACLA"], ["DVqc2B1AfKr", 2432, "Md Arif Hasnat"], ["DFYYiZxNKpO", 831000, "Cole Gonzales"], ["DWWwD1MjXKq", 5926, "Saturate"]] },
   { id: "think-studio", group: true, cat: "Agency", name: "Think Studio", handle: "thinkstudioau", avatars: ["thinkstudioau", "sonnybillwilliams", "unitedmuslimsofaustralia", "islamophobiaregisteraus"],
     videos: [["DMfF8FMxQnp", 1000000, "Sonny Bill Williams"], ["DPOIQcVkq83", 60800, "United Muslims of Australia"], ["DK_n7QsyRq0", 52300, "Think Studio"], ["Db7uiUoxQGb", 32400, "Islamophobia Register"], ["DGxkAHKSLau", 32100, "United Muslims of Australia"], ["DV3Mxsmjzr_", 23900, "Islamophobia Register"], ["DPQz6LVDSNM", 4608, "United Muslims of Australia"]] },
   { id: "higgsfield", cat: "Brand partnerships", name: "Higgsfield", handle: "higgsfield.ai", reach: { instagram: 2000000, youtube: 529000, x: 255700 }, avatars: ["higgsfield.ai"],
@@ -84,6 +84,22 @@ const MESSAGES = {
     { text: "The editing style is great, especially in the beginning with the phone UI animation and then the Instagram grid look. And also the scrolling through the UI of invideo", date: "21 May 2026" },
     { text: "Thank you for the fast turnaround, everything got approved!", date: "23 Apr 2026" },
     { text: "Looks great, thanks a lot!", date: "20 Nov 2025" },
+  ],
+  // `who` ties a message to that person's videos in a group (the Gallery puts it beside them).
+  creators: [
+    { who: "Marisa", from: "Marisa", avatar: "marisa", date: "14 Dec 2025", text: "Your work is absolutely outstanding, congrats on what you’ve been creating!!" },
+    { who: "Marisa", from: "Marisa", avatar: "marisa", date: "2 Feb 2026", text: "Thank you very much for the great work and for the care and effort you put into every detail. It’s truly appreciated." },
+    { who: "Baurjan Tulegenov", from: "Baurjan Tulegenov", avatar: "baurrovski", date: "28 Nov 2025", text: "best edit so far" },
+    { who: "Baurjan Tulegenov", from: "Baurjan Tulegenov", avatar: "baurrovski", date: "4 Apr 2026", text: "very good work as usual 🔥🔥🔥" },
+    { who: "Roman", from: "Roman", avatar: "shootsroman", date: "8 Oct 2026", text: "Your videos are insane!" },
+    { who: "Saturate", from: "Noah Stupers", avatar: "saturate.be", date: "15 Mar 2026", text: "I appreciate your hard work brother - crazy talented guy" },
+    { who: "Saturate", from: "Noah Stupers", avatar: "saturate.be", date: "15 Mar 2026", text: "Yes man, thank you for this 🙏 worth every dollar" },
+  ],
+  launch: [
+    { from: "Baurjan Tulegenov, Quantora", avatar: "baurrovski", date: "5 Jan 2026", text: "my man Hasibullah is a magician" },
+    { from: "Baurjan Tulegenov, Quantora", avatar: "baurrovski", date: "5 Jan 2026", text: "nobody better for the job" },
+    { from: "Quantora design team", avatar: "quantora", date: "3 Aug 2026", text: "Congrats on creating the video, bro. You really captured the visual identity we’re building for Quantora. Top-notch work🙌" },
+    { from: "Wifi Money Club", avatar: "wifimoneyclub", date: "5 Aug 2026", text: "Thanks for the video. It looks phenomenal. 🔥" },
   ],
 };
 
@@ -361,13 +377,13 @@ if (canvas) {
   for (const g of GROUPS) {
     const voices = (typeof VOICES !== "undefined" && VOICES[g.id]) || [];
     if (voices.length) sources.push(voices.map((v) => ({ id: g.id, make: () => voiceBubble(v, g, true) })));
-    if ((MESSAGES[g.id] || []).length) sources.push(MESSAGES[g.id].map((m) => ({ id: g.id, make: () => messageCard(m, g) })));
+    if ((MESSAGES[g.id] || []).length) sources.push(MESSAGES[g.id].map((m) => ({ id: m.who || g.id, make:() => messageCard(m, g) })));
   }
   const notes = [];
   while (sources.some((q) => q.length)) sources.forEach((q) => { if (q.length) notes.push(q.shift()); });
   const noteCols = [0, 2, 4, 6];                       // the two X columns and the two W columns
   const notesAt = plan.map(() => []);
-  const idsIn = (ci, ri) => (plan[ci] && plan[ci][ri] ? plan[ci][ri].map(([r]) => r.group.id) : []);
+  const idsIn = (ci, ri) => (plan[ci] && plan[ci][ri] ? plan[ci][ri].flatMap(([r]) => r.label ? [r.group.id, r.label] : [r.group.id]) : []);
   const near = (ci, after) => {
     const rows = plan[ci].length, own = [...idsIn(ci, after), ...idsIn(ci, after + 1)], side = [];
     for (const nc of [ci - 1, ci + 1]) {
@@ -792,7 +808,10 @@ if (stage) {
     // The centred video's platforms and views sit straight under it, above the dots (or under the list).
     const view = document.querySelector("#stage .car__view");
     if (view) view.after(nowBox); else document.getElementById("stage").after(nowBox);
+    // With messages from several people, they go below the Request a video button.
+    const many = new Set(msgs.map((m) => m.from || g.name)).size > 1 || (g.group && withNames.length > 1);
     if (phone.matches) { document.getElementById("soon").after(cta, tm); }
+    else if (many) { aside.append(cta, tm); }
     else { document.getElementById("csocials").after(tm); aside.append(cta); }
   };
   place();
