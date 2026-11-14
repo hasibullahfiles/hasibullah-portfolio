@@ -210,7 +210,7 @@ body:not(.is-home) .nav { background: var(--bg); }
 .pavs { display: flex; margin-bottom: 16px; }
 .pavs .av { width: 84px; height: 84px; }
 .pavs--many .av { width: 56px; height: 56px; }
-.pavs--many .av + .av { margin-left: -16px; }
+.pavs--many .av + .av { margin-left: -20px; }
 .reach { margin-top: clamp(20px, 3.5vh, 34px); }
 .reach__total { font-size: 0.875rem; color: var(--muted); }
 .reach__total--second { margin-top: 10px; }

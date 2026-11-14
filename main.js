@@ -1033,9 +1033,14 @@ if (form) {
       let at = -1;
       if (gx === 0 && gy === 0) kids.forEach((av, i) => { const r = av.getBoundingClientRect(); if (px >= r.left - s[i].x && px <= r.right - s[i].x) at = i; });
       const open = at >= 0 && at < kids.length - 1 ? overlapOf(st) + 4 : 0;
-      const spread = Math.min(SPREAD, (roomOf(st) - open) / (kids.length - 1));
+      const room = roomOf(st), spread = Math.min(SPREAD, (room - open) / (kids.length - 1));
+      // The gap opens right after the hovered picture and closes again toward the end of the stack, so the
+      // pictures after it bunch up a little and the last one never moves (nothing gets pushed past the edge).
+      const last = kids.length - 1;
       kids.forEach((av, i) => {
-        s[i].tx = Math.max(0, spread) * i * g + (at >= 0 && i > at ? open : 0);
+        let shove = at >= 0 && i > at ? open : 0;
+        if (shove && room < open && at < last - 1) shove = open * (last - i) / (last - at - 1);   // no room: bunch up instead
+        s[i].tx = Math.max(0, spread) * i * g + shove;
         s[i].ty = i === at ? -LIFT : 0;
       });
       if (at >= 0 && kids[at].dataset.name) { tagWant = 1; if (tagAv !== kids[at]) { tagAv = kids[at]; tag.textContent = tagAv.dataset.name; } }
