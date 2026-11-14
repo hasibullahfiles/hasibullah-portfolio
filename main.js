@@ -139,40 +139,62 @@ const linkOf = (r) => `/work/${r.group.id}/${r.code}`;
 
 /* ---------- Testimonials: a voice note as a message-app audio bubble ----------
    Play/pause, a waveform whose bars fill as it plays (click a bar to jump there), and the time left.
+   One shared handler drives every bubble, including copies the Gallery makes for its endless loop.
    Starting one stops any other voice note or video on the page. */
 const clock = (t) => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, "0")}`;
-function voiceBubble(v, g) {
+function voiceBubble(v, g, withSender) {
   const box = el("div", "vb");
+  box.dataset.dur = v.dur; box.dataset.name = g.name;
   const play = el("button", "vb__play"); play.type = "button";
   play.setAttribute("aria-label", `Play voice note from ${g.name}`);
   play.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path class="vb__i-play" d="M8 5.5v13l11-6.5z"/><path class="vb__i-pause" d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>';
   const wave = el("span", "vb__wave");
-  const bars = v.peaks.map((p) => { const b = el("i"); b.style.setProperty("--h", p.toFixed(3)); wave.append(b); return b; });
-  const time = el("span", "vb__time", clock(v.dur));
+  v.peaks.forEach((p) => { const b = el("i"); b.style.setProperty("--h", p.toFixed(3)); wave.append(b); });
   const audio = el("audio"); audio.preload = "none"; audio.src = v.src;
-  box.append(play, wave, time, audio);
+  box.append(play, wave, el("span", "vb__time", clock(v.dur)), audio);
+  if (!withSender) return box;
+  // In the Gallery the bubble is away from the client's page, so it carries their picture and name, like a group chat.
+  const note = el("div", "vnote");
+  const av = el("img", "vnote__av"); av.src = `/avatars/${(g.avatars || [])[0]}.jpg`; av.alt = ""; av.width = 28; av.height = 28; av.decoding = "async"; av.draggable = false;
+  const col = el("div", "vnote__col");
+  col.append(el("span", "vnote__name", g.name), box);
+  note.append(av, col);
+  return note;
+}
+function wireVoice(box) {
+  if (box._wired) return box.querySelector("audio");
+  box._wired = true;
+  const audio = box.querySelector("audio"), play = box.querySelector(".vb__play"), time = box.querySelector(".vb__time");
+  const bars = [...box.querySelectorAll(".vb__wave i")], dur = +box.dataset.dur, name = box.dataset.name;
   const paint = () => {
     const f = audio.duration ? audio.currentTime / audio.duration : 0;
     const on = Math.round(f * bars.length);
     bars.forEach((b, i) => b.classList.toggle("is-on", i < on));
-    time.textContent = clock(audio.paused && !audio.currentTime ? v.dur : Math.max(0, (audio.duration || v.dur) - audio.currentTime));
+    time.textContent = clock(audio.paused && !audio.currentTime ? dur : Math.max(0, (audio.duration || dur) - audio.currentTime));
   };
-  play.addEventListener("click", () => { if (audio.paused) audio.play().catch(() => {}); else audio.pause(); });
   audio.addEventListener("play", () => {
     document.querySelectorAll("audio, video").forEach((o) => { if (o !== audio) o.pause(); });
-    box.classList.add("is-playing"); play.setAttribute("aria-label", `Pause voice note from ${g.name}`);
+    box.classList.add("is-playing"); play.setAttribute("aria-label", `Pause voice note from ${name}`);
   });
-  audio.addEventListener("pause", () => { box.classList.remove("is-playing"); play.setAttribute("aria-label", `Play voice note from ${g.name}`); });
+  audio.addEventListener("pause", () => { box.classList.remove("is-playing"); play.setAttribute("aria-label", `Play voice note from ${name}`); });
   audio.addEventListener("ended", () => { audio.currentTime = 0; paint(); });
   audio.addEventListener("timeupdate", paint);
-  wave.addEventListener("click", (e) => {
-    const r = wave.getBoundingClientRect();
-    const f = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
-    const go = () => { audio.currentTime = f * audio.duration; paint(); };
-    if (audio.readyState >= 1) go(); else { audio.addEventListener("loadedmetadata", go, { once: true }); audio.load(); }
-  });
-  return box;
+  box._paint = paint;
+  return audio;
 }
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest && e.target.closest(".vb__play");
+  const wave = !btn && e.target.closest && e.target.closest(".vb__wave");
+  if (!btn && !wave) return;
+  if (suppressClick) return;            // the end of a drag on the Gallery is not a click
+  const box = (btn || wave).closest(".vb");
+  const audio = wireVoice(box);
+  if (btn) { if (audio.paused) audio.play().catch(() => {}); else audio.pause(); return; }
+  const r = wave.getBoundingClientRect();
+  const f = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
+  const go = () => { audio.currentTime = f * audio.duration; box._paint(); };
+  if (audio.readyState >= 1) go(); else { audio.addEventListener("loadedmetadata", go, { once: true }); audio.load(); }
+});
 // A message the client sent, shown the way it looked in the chat: picture, name, date, words.
 function messageCard(m, g) {
   const card = el("figure", "msg");
@@ -325,6 +347,27 @@ if (canvas) {
     }
   }
 
+  // Testimonials (voice notes and messages) placed between rows of the wider columns, alternating person and
+  // kind, so each one shows once per block and two of the same never sit together.
+  const sources = [];
+  for (const g of GROUPS) {
+    const voices = (typeof VOICES !== "undefined" && VOICES[g.id]) || [];
+    if (voices.length) sources.push(voices.map((v) => () => voiceBubble(v, g, true)));
+    if ((MESSAGES[g.id] || []).length) sources.push(MESSAGES[g.id].map((m) => () => messageCard(m, g)));
+  }
+  const notes = [];
+  while (sources.some((q) => q.length)) sources.forEach((q) => { if (q.length) notes.push(q.shift()); });
+  const noteCols = [2, 4, 6, 0];                       // the two W columns and the two X columns
+  const notesAt = plan.map(() => []);
+  // Rotate the column each round so one column never collects the same person, then spread each
+  // column's notes over its gaps (above the first row counts as a gap too).
+  const byCol = noteCols.map(() => []);
+  notes.forEach((make, k) => byCol[(k + Math.floor(k / noteCols.length)) % noteCols.length].push({ make, k }));
+  byCol.forEach((list, j) => {
+    const ci = noteCols[j], gaps = plan[ci].length + 1;
+    list.forEach(({ make, k }, i) => notesAt[ci].push({ after: Math.floor((i * gaps) / list.length) - 1, make, side: (k + ci) % 2 }));
+  });
+
   const track = el("div", "ctrack");
   canvas.append(track);
   let stacks = [], blockW = 0;
@@ -338,7 +381,15 @@ if (canvas) {
         const col = el("div", "ccol ccol--" + COLS[ci]);
         const stack = el("div", "cstack");
         const set = el("div", "cset");
-        rows.forEach((cells) => {
+        const addNotes = (ri) => notesAt[ci].filter((n) => n.after === ri).forEach((n) => {
+          const nrow = el("div", n.side ? "crow crow--note crow--end" : "crow crow--note");
+          const node = n.make();
+          if (hidden) { node.setAttribute("aria-hidden", "true"); node.querySelectorAll("button").forEach((b) => { b.tabIndex = -1; }); }
+          nrow.append(node);
+          set.append(nrow);
+        });
+        addNotes(-1);
+        rows.forEach((cells, ri) => {
           const row = el("div", "crow");
           cells.forEach(([r, isBig, wide]) => {
             const t = tile(r, isBig, wide);
@@ -346,6 +397,7 @@ if (canvas) {
             row.append(t);
           });
           set.append(row);
+          addNotes(ri);
         });
         stack.append(set);
         col.append(stack);
@@ -366,7 +418,7 @@ if (canvas) {
       const nV = Math.ceil(vh / s.h) + 1;
       for (let i = 1; i < nV; i++) {
         const copy = s.set.cloneNode(true);
-        copy.querySelectorAll("a").forEach((a) => { a.tabIndex = -1; a.setAttribute("aria-hidden", "true"); });
+        copy.querySelectorAll("a, button").forEach((a) => { a.tabIndex = -1; a.setAttribute("aria-hidden", "true"); });
         s.stack.append(copy);
       }
     });
@@ -571,10 +623,8 @@ if (stage) {
     });
   } else { namesBox.hidden = true; }
   // Details of the video currently in the centre.
-  const now = { note: document.getElementById("nownote"), stats: document.getElementById("nowstats") };
+  const now = { stats: document.getElementById("nowstats") };
   const showNow = (r) => {
-    now.note.textContent = noteOf(r.code);
-    now.note.hidden = !noteOf(r.code);
     now.stats.replaceChildren(stats(r));
     nameEls.forEach((b, n) => b.setAttribute("aria-current", n === r.who ? "true" : "false"));
   };
@@ -686,7 +736,7 @@ if (stage) {
       if (e.key === "ArrowLeft") { e.preventDefault(); go(want - 1); }
     });
     jump = go;
-    nav.append(prev, dots, next);
+    nav.append(dots);                                   // dots only; arrow keys and swipes still move it
     // Soft edges: the videos blur and fade into the page at both sides.
     const view = el("div", "car__view");
     const edge = (side) => { const e = el("div", "car__edge car__edge--" + side); e.setAttribute("aria-hidden", "true"); for (let k = 0; k < 6; k++) e.append(el("i")); return e; };
@@ -717,7 +767,7 @@ if (stage) {
   const place = () => {
     const tm = document.getElementById("tmon");
     if (phone.matches) { const after = document.getElementById("soon"); after.after(nowBox, cta, tm); }
-    else { document.getElementById("csocials").after(tm); aside.append(nowBox, cta); }
+    else { document.getElementById("csocials").after(tm); document.getElementById("stage").after(nowBox); aside.append(cta); }
   };
   place();
   phone.addEventListener("change", place);
