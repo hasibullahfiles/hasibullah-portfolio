@@ -338,6 +338,7 @@ body:not(.is-home) .nav { background: var(--bg); }
 
 /* Contact */
 .form { display: grid; }
+.form[hidden] { display: none; }
 .form input[type="text"], .form input[type="email"], .form input[type="tel"], .form textarea {
   font: 400 0.875rem/1.5 var(--font); letter-spacing: inherit; color: var(--ink);
   background: none; border: 0; border-bottom: 1px solid var(--line); border-radius: 0;
