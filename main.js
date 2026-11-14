@@ -16,9 +16,9 @@ const GROUPS = [
   { id: "think-studio", group: true, cat: "Agency", name: "Think Studio", handle: "thinkstudioau", avatars: ["thinkstudioau", "sonnybillwilliams", "unitedmuslimsofaustralia", "islamophobiaregisteraus"],
     videos: [["DMfF8FMxQnp", 1000000, "Sonny Bill Williams"], ["DPOIQcVkq83", 60800, "United Muslims of Australia"], ["DK_n7QsyRq0", 52300, "Think Studio"], ["Db7uiUoxQGb", 32400, "Islamophobia Register"], ["DGxkAHKSLau", 32100, "United Muslims of Australia"], ["DV3Mxsmjzr_", 23900, "Islamophobia Register"], ["DPQz6LVDSNM", 4608, "United Muslims of Australia"]] },
   { id: "50blvd", group: true, cat: "Agency", name: "50 Blvd", handle: "interceptorfilms", avatars: ["50blvd"],
-    videos: [["blvd-ergo-1st-draft", null, "Ergo 1st draft", ""], ["blvd-ergo-v2", null, "Ergo V2", ""], ["blvd-oasiz-ai-1", null, "Oasiz AI 1", ""], ["blvd-virtue-ai-company-overview-video-updated", null, "Virtue AI \u2014 Company Overview Video (updated)", ""], ["blvd-virtue-ai-company-overview-video-v2", null, "Virtue AI \u2014 Company Overview Video (v2)", ""], ["blvd-virtue-ai-demo-video", null, "Virtue AI \u2014 Demo Video", ""], ["blvd-virtue-ai-tradewinds-video", null, "Virtue AI \u2014 Tradewinds Video", ""]] },
-  { id: "gian", group: true, cat: "Agency", name: "Gian", avatars: ["gian"],
-    videos: [["gian-2-scoopy-dogs", null, "Scoopy Dogs", ""], ["gian-3-scoopy-dogs", null, "Scoopy Dogs", ""], ["gian-5g-auto-trade-not-edited", null, "5G Auto Trade Not edited", ""], ["gian-andres-torrente-ad-2", null, "Andres Torrente AD 2", ""], ["gian-andres-torrente-ad-with-music", null, "Andres Torrente AD with music", ""], ["gian-andres-torrente-ad", null, "Andres Torrente AD", ""], ["gian-azurri-pest-control", null, "Azurri Pest Control", ""], ["gian-bin-blasters-no-music", null, "Bin Blasters - no music", ""], ["gian-bin-blasters", null, "Bin Blasters", ""], ["gian-brightology", null, "Brightology", ""], ["gian-elixir", null, "Elixir", ""], ["gian-fence-solution", null, "Fence Solution", ""], ["gian-lets-go-glass", null, "LETS GO GLASS", ""], ["gian-lj-cleaning", null, "LJ Cleaning", ""], ["gian-mmff-version-2", null, "MMFF - version 2", ""], ["gian-mmff", null, "MMFF", ""], ["gian-mobile-veterinary-ad-vocal", null, "Mobile Veterinary AD vocal", ""], ["gian-no-music-save-on-cleaners", null, "No Music- Save On Cleaners", ""], ["gian-no-music-washing-guru-ad", null, "No Music- Washing Guru Ad", ""], ["gian-save-on-cleaners", null, "Save On Cleaners", ""], ["gian-second-ad", null, "Second Ad", ""], ["gian-smart-eagle-version-1", null, "Smart Eagle - version 1", ""], ["gian-smart-eagle-version-2", null, "Smart Eagle - version 2", ""], ["gian-viavan-with-music", null, "Viavan with music", ""], ["gian-washing-guru-ad-version-2", null, "Washing Guru Ad - version 2", ""], ["gian-washing-guru-ad", null, "Washing Guru Ad", ""], ["gian-without-music-mmff", null, "Without Music MMFF", ""]] },
+    videos: [["blvd-tavus-phoenix-4-launch", null, "Tavus Phoenix-4 Launch", ""], ["blvd-ergo-v2", null, "Ergo", ""], ["blvd-oasiz-ai-1", null, "Oasiz AI", ""], ["blvd-virtue-ai-company-overview-video-updated", null, "Virtue AI Company Overview", ""], ["blvd-virtue-ai-demo-video", null, "Virtue AI Demo", ""], ["blvd-virtue-ai-tradewinds-video", null, "Virtue AI Tradewinds", ""]] },
+  { id: "gian", group: true, cat: "Agency", name: "Aliens Create", handle: "alienscreate", avatars: ["alienscreate"],
+    videos: [["gian-3-scoopy-dogs", null, "Scoopy Dogs", ""], ["gian-5g-auto-trade-not-edited", null, "5G Auto Trade", ""], ["gian-andres-torrente-ad-2", null, "Andres Torrente", ""], ["gian-andres-torrente-ad-with-music", null, "Andres Torrente", ""], ["gian-azurri-pest-control", null, "Azurri Pest Control", ""], ["gian-bin-blasters", null, "Bin Blasters", ""], ["gian-brightology", null, "Brightology", ""], ["gian-elixir", null, "Elixir", ""], ["gian-fence-solution", null, "Fence Solution", ""], ["gian-lets-go-glass", null, "Let's Go Glass", ""], ["gian-lj-cleaning", null, "LJ Cleaning", ""], ["gian-mmff-version-2", null, "MMFF", ""], ["gian-mobile-veterinary-ad-vocal", null, "Mobile Veterinary", ""], ["gian-save-on-cleaners", null, "Save On Cleaners", ""], ["gian-second-ad", null, "Second Ad", ""], ["gian-smart-eagle-version-2", null, "Smart Eagle", ""], ["gian-viavan-with-music", null, "Viavan", ""], ["gian-washing-guru-ad-version-2", null, "Washing Guru", ""]] },
   { id: "higgsfield", cat: "Brand partnerships", name: "Higgsfield", handle: "higgsfield.ai", reach: { instagram: 2000000, youtube: 529000, x: 255700 }, avatars: ["higgsfield.ai"],
     videos: [["Da8CmrlyVYc", 83800], ["DbLn3AFymYy", 78400], ["Dd6h-e1BIfA", 58200]] },
   { id: "invideo", cat: "Brand partnerships", name: "Invideo AI", handle: "invideo.io", reach: { instagram: 579000, x: 37800 }, avatars: ["invideo.io"],
@@ -110,11 +110,9 @@ const MESSAGES = {
     { who: "Saturate", from: "Noah Stupers", avatar: "saturate.be", date: "15 Mar 2026", text: "I appreciate your hard work brother - crazy talented guy" },
     { who: "Saturate", from: "Noah Stupers", avatar: "saturate.be", date: "15 Mar 2026", text: "Yes man, thank you for this 🙏 worth every dollar" },
   ],
-  // Gian's video testimonial (6 Apr 2026), in his own words; the name heard as "Hasibula" is written properly.
+  // Gian Macrobio (Aliens Create) sent a video testimonial (6 Apr 2026).
   gian: [
-    { from: "Gian", avatar: "gian", date: "6 Apr 2026", text: "I've been working with Hasibullah for already like six months, and the work he's doing is extremely, extremely good. I'm a video producer, so sometimes I need too much help with editing, and he's the man. He's the guy." },
-    { from: "Gian", avatar: "gian", date: "6 Apr 2026", text: "My clients are very happy, and it's awesome. He always responds fast. He works very fast. He works professional. Everything. So I 100% recommend Hasibullah." },
-    { from: "Gian", avatar: "gian", date: "8 Apr 2026", text: "Top notch!" },
+    { from: "Gian Macrobio", avatar: "alienscreate", date: "6 Apr 2026", video: "/videos/gian-testimonial.mp4", poster: "/covers/gian-testimonial.jpg" },
   ],
   "50blvd": [
     { from: "Cal Hunter", avatar: "50blvd", date: "27 Jan 2026", text: "Always love that you get the animations to match their branding so thanks again for that!" },
@@ -253,7 +251,15 @@ function messageCard(m, g) {
   const av = el("img", "msg__av"); av.src = `/avatars/${m.avatar || (g.avatars || [])[0]}.jpg`; av.alt = ""; av.width = 32; av.height = 32; av.decoding = "async"; av.draggable = false;
   const body = el("div", "msg__body");
   const head = el("p", "msg__head"); head.append(el("strong", null, m.from || g.name), el("time", null, m.date));
-  body.append(head, el("blockquote", "msg__text", m.text));
+  body.append(head);
+  if (m.video) {
+    // A video message: the client's own clip, played in place like a video sent in a chat.
+    const v = el("video", "msg__clip");
+    v.src = m.video; v.poster = m.poster || ""; v.preload = "none"; v.playsInline = true; v.controls = true; lock(v);
+    v.addEventListener("play", () => document.querySelectorAll("audio, video").forEach((o) => { if (o !== v) o.pause(); }));
+    body.append(v);
+  }
+  if (m.text) body.append(el("blockquote", "msg__text", m.text));
   card.append(av, body);
   return card;
 }
@@ -992,57 +998,72 @@ if (form) {
   }, { passive: true });
 })();
 
-/* ---------- Stacked profile pictures fan out near the cursor ----------
-   On any stack of two or more pictures (More creators, Think Studio), the pictures slide apart a
-   little as the pointer approaches, so more of each face shows, and close up again when it leaves.
-   The stacking order never changes, so no picture cuts across another. Hover only.
-   On the Work page the row is still a link, so a click opens the page as before. */
+/* ---------- Stacked profile pictures: open on hover, with names ----------
+   On any stack of two or more pictures (More creators, Think Studio), the pictures spread a little as
+   the pointer comes near. Over a picture, the ones after it glide aside until its face is fully uncovered
+   (no picture ever jumps over another), and its name fades in above it. Every movement runs on one soft
+   spring, so the stack never snaps. Hover only; on the Work page the row is still a link. */
 (() => {
   if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const stacks = [...document.querySelectorAll(".wrow__avs, .pavs")].filter((st) => st.children.length > 1);
   if (!stacks.length) return;
   stacks.forEach((st) => st.classList.add("stack"));
-  const REACH = 110, STEP = 13, LIFT = 3;
+  const tag = el("div", "avname"); tag.setAttribute("aria-hidden", "true");
+  document.body.append(tag);
+  const REACH = 110, SPREAD = 6, LIFT = 3, K = 0.16;
   const smooth = (t) => t * t * (3 - 2 * t);
-  let px = -9999, py = -9999, queued = false;
-  const active = new Set();
-  const rest = (st) => { for (const av of st.children) { av._tx = 0; av.style.transform = ""; } };
-  // How far each picture may slide without running into whatever sits to the right of the stack.
-  const roomFor = (st, n) => {
+  let px = -9999, py = -9999, raf = 0, tagOn = 0, tagWant = 0, tagAv = null;
+  const state = new Map(stacks.map((st) => [st, [...st.children].map(() => ({ x: 0, y: 0, tx: 0, ty: 0 }))]));
+  const overlapOf = (st) => { const k = st.children; return k.length > 1 ? Math.max(0, k[0].getBoundingClientRect().right - k[1].getBoundingClientRect().left + (state.get(st)[1].x - state.get(st)[0].x)) : 0; };
+  // Room to the right of the stack (on the Work page the client name sits there).
+  const roomOf = (st) => {
     const box = st.closest(".wrow") ? st.closest(".wrow").querySelector(".wrow__name") : null;
-    const last = st.lastElementChild.getBoundingClientRect();
-    const limit = box ? box.getBoundingClientRect().left - 14 : st.parentElement.getBoundingClientRect().right;
-    return Math.max(0, Math.min(STEP, (limit - (last.right - (st.lastElementChild._tx || 0))) / (n - 1)));
+    const last = st.lastElementChild.getBoundingClientRect(), s = state.get(st), lx = s[s.length - 1].x;
+    const limit = box ? box.getBoundingClientRect().left - 12 : st.parentElement.getBoundingClientRect().right;
+    return Math.max(0, limit - (last.right - lx));
   };
-  const tick = () => {
-    queued = false;
+  const aim = () => {
+    tagWant = 0;
     for (const st of stacks) {
-      const sb = st.getBoundingClientRect();
-      if (px < sb.left - REACH || px > sb.right + REACH || py < sb.top - REACH || py > sb.bottom + REACH) {
-        if (active.has(st)) { rest(st); active.delete(st); }
-        continue;
-      }
-      active.add(st);
+      const s = state.get(st), kids = [...st.children], sb = st.getBoundingClientRect();
       const gx = Math.max(sb.left - px, 0, px - sb.right), gy = Math.max(sb.top - py, 0, py - sb.bottom);
-      const g = smooth(Math.max(0, 1 - Math.hypot(gx, gy) / REACH));   // 1 when the pointer is on the stack
-      const kids = [...st.children], step = roomFor(st, kids.length);
+      const g = smooth(Math.max(0, 1 - Math.hypot(gx, gy) / REACH));
+      // Which picture is under the pointer: judged on the resting layout, so the moving pictures never flicker it.
+      let at = -1;
+      if (gx === 0 && gy === 0) kids.forEach((av, i) => { const r = av.getBoundingClientRect(); if (px >= r.left - s[i].x && px <= r.right - s[i].x) at = i; });
+      const open = at >= 0 && at < kids.length - 1 ? overlapOf(st) + 4 : 0;
+      const spread = Math.min(SPREAD, (roomOf(st) - open) / (kids.length - 1));
       kids.forEach((av, i) => {
-        const b = av.getBoundingClientRect();
-        const cx = b.left + b.width / 2 - (av._tx || 0);
-        const near = smooth(Math.max(0, 1 - Math.abs(cx + i * step * g - px) / 60)) * g;
-        const tx = i * step * g;
-        av._tx = tx;
-        av.style.transform = `translate3d(${tx.toFixed(1)}px, ${(-LIFT * near).toFixed(1)}px, 0)`;
+        s[i].tx = Math.max(0, spread) * i * g + (at >= 0 && i > at ? open : 0);
+        s[i].ty = i === at ? -LIFT : 0;
       });
+      if (at >= 0 && kids[at].dataset.name) { tagWant = 1; if (tagAv !== kids[at]) { tagAv = kids[at]; tag.textContent = tagAv.dataset.name; } }
     }
   };
-  document.addEventListener("pointermove", (e) => {
-    if (e.pointerType === "touch") return;
-    px = e.clientX; py = e.clientY;
-    if (!queued) { queued = true; requestAnimationFrame(tick); }
-  }, { passive: true });
-  document.addEventListener("pointerleave", () => { px = py = -9999; for (const st of active) rest(st); active.clear(); });
+  const frame = () => {
+    let moving = false;
+    for (const st of stacks) {
+      const s = state.get(st), kids = st.children;
+      s.forEach((p, i) => {
+        p.x += (p.tx - p.x) * (still ? 1 : K); p.y += (p.ty - p.y) * (still ? 1 : K);
+        if (Math.abs(p.tx - p.x) > 0.05 || Math.abs(p.ty - p.y) > 0.05) moving = true;
+        kids[i].style.transform = p.x || p.y ? `translate3d(${p.x.toFixed(2)}px, ${p.y.toFixed(2)}px, 0)` : "";
+      });
+    }
+    tagOn += (tagWant - tagOn) * (still ? 1 : 0.2);
+    if (Math.abs(tagWant - tagOn) > 0.01) moving = true;
+    if (tagAv) {
+      const r = tagAv.getBoundingClientRect(), e = smooth(Math.min(1, Math.max(0, tagOn)));
+      tag.style.opacity = e.toFixed(3);
+      tag.style.transform = `translate3d(${(r.left + r.width / 2).toFixed(1)}px, ${(r.top - 8 + (1 - e) * 4).toFixed(1)}px, 0) translate(-50%, -100%)`;
+    }
+    raf = moving ? requestAnimationFrame(frame) : 0;
+  };
+  const run = () => { aim(); if (!raf) raf = requestAnimationFrame(frame); };
+  document.addEventListener("pointermove", (e) => { if (e.pointerType === "touch") return; px = e.clientX; py = e.clientY; run(); }, { passive: true });
+  document.addEventListener("pointerleave", () => { px = py = -9999; run(); });
+  window.addEventListener("scroll", () => { px = py = -9999; run(); }, { passive: true });
 })();
 
 /* ---------- Light and dark mode switch ---------- */
@@ -1100,30 +1121,4 @@ if (form) {
     name.addEventListener("pointerleave", () => { want = 0; run(); });
   }
   window.addEventListener("scroll", () => { if (want) { want = 0; run(); } }, { passive: true });
-})();
-
-/* ---------- Names on stacked pictures ----------
-   In a stack of pictures (More creators, Think Studio), pointing at one makes the pictures after it
-   slide aside, so it is uncovered without jumping over the others, and its name fades in above it. */
-(() => {
-  if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
-  const tag = el("div", "avname"); tag.setAttribute("aria-hidden", "true");
-  document.body.append(tag);
-  let on = null;
-  const hide = () => { if (on) { on.classList.remove("av--open"); on = null; } tag.classList.remove("is-on"); };
-  document.addEventListener("pointerover", (e) => {
-    const av = e.target.closest && e.target.closest("img.av[data-name]");
-    if (!av) return;
-    if (on && on !== av) on.classList.remove("av--open");
-    on = av; av.classList.add("av--open");
-    tag.textContent = av.dataset.name;
-    const b = av.getBoundingClientRect();   // the hovered picture stays put; only the ones after it move
-    tag.style.left = `${b.left + b.width / 2}px`; tag.style.top = `${b.top - 8}px`;
-    tag.classList.add("is-on");
-  });
-  document.addEventListener("pointerout", (e) => {
-    const av = e.target.closest && e.target.closest("img.av[data-name]");
-    if (av && !(e.relatedTarget && av.contains(e.relatedTarget))) hide();
-  });
-  window.addEventListener("scroll", hide, { passive: true });
 })();

@@ -503,7 +503,7 @@ body:not(.is-home) .nav nav a:focus-visible { color: var(--ink); }
 
 /* Stacked profile pictures: each one moves on its own (positions set from main.js) */
 .stack { transform: none !important; }
-.stack .av { position: relative; transition: transform 320ms var(--ease-out); will-change: transform; }
+.stack .av { position: relative; will-change: transform; }
 
 /* Dark mode details */
 :root[data-theme="dark"] .ico { filter: invert(1); }
@@ -695,6 +695,7 @@ html { background: var(--bg); }
 .msg__head { display: flex; align-items: baseline; gap: 8px; font-size: 0.8125rem; line-height: 1.2; }
 .msg__head strong { font-weight: 600; }
 .msg__head time { font-size: 0.6875rem; color: var(--muted); }
+.msg__clip { display: block; margin-top: 8px; width: min(170px, 100%); aspect-ratio: 9 / 16; object-fit: cover; border-radius: 12px; background: var(--field); }
 .msg__text { margin: 4px 0 0; font-size: 0.8125rem; line-height: 1.45; }
 /* The column scrolls on its own when the testimonials make it taller than the screen */
 .project__text:has(.tmon:not([hidden])) { max-height: 100dvh; overflow-y: auto; scrollbar-width: none; padding-bottom: 40px; }
@@ -729,18 +730,12 @@ html { background: var(--bg); }
 .car .now + .car__nav { margin-top: 12px; }
 .car__nav { padding-right: 0; }
 
-/* Stacked pictures: the first sits on top (z-index set in main.js); the one under the pointer rises above
-   the rest, and its name fades in over it. */
-.wrow__avs .av, .pavs .av { position: relative; transition: transform 320ms var(--ease-out), margin-left 280ms var(--ease-out); }
-/* The picture after the hovered one slides right until the hovered face is fully uncovered. */
-.wrow__avs .av.av--open + .av, .pavs--many .av.av--open + .av { margin-left: 3px; }
+/* Stacked pictures: the name of the one under the pointer, drawn above it (moved by main.js). */
 .avname {
   position: fixed; left: 0; top: 0; z-index: 1000; pointer-events: none; white-space: nowrap;
   font: 500 0.75rem/1 var(--font); color: var(--bg); background: var(--ink); padding: 6px 9px; border-radius: 6px;
-  opacity: 0; transform: translate(-50%, calc(-100% + 4px)); transition: opacity 180ms var(--ease-out), transform 220ms var(--ease-out);
+  opacity: 0; will-change: transform, opacity;
 }
-.avname.is-on { opacity: 1; transform: translate(-50%, -100%); }
-@media (prefers-reduced-motion: reduce) { .avname { transition: opacity 120ms linear; transform: translate(-50%, -100%); } }
 /* The creator's name beside the views under the centred video (More creators, Think Studio). */
 .now__who { color: var(--ink); font-size: 0.8125rem; font-weight: 500; }
 .car .now #nowstats, .project__media .now #nowstats { display: inline-flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center; }
