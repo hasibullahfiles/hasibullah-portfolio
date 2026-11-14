@@ -74,6 +74,12 @@ const MESSAGES = {
     { text: "You do such a good job editing for the viewer", date: "8 Oct 2026" },
     { text: "Fantastic dude you're so clutch man", date: "10 Oct 2026" },
   ],
+  "think-studio": [
+    { from: "Annas Hussein Agha", avatar: "annas", date: "21 May 2026", text: "Just wanted to say how much I actually appreciated working with you bro, been working with a few different editors, but no one is like you bro. You understand and just know how to do things perfectly on the first go haha" },
+    { from: "Annas Hussein Agha", avatar: "annas", date: "21 May 2026", text: "Literally bro I couldn’t find anyone that is talented like you are mashallah" },
+    { from: "Annas Hussein Agha", avatar: "annas", date: "21 Jan 2026", text: "Tbh bro your work is better haha, you’ve got that magic touch mashallah" },
+    { from: "Annas Hussein Agha", avatar: "annas", date: "16 Jan 2026", text: "The door is always open on our end if you’d ever like to return InshaAllah" },
+  ],
   "daniel-do": [
     { text: "The editing style is great, especially in the beginning with the phone UI animation and then the Instagram grid look. And also the scrolling through the UI of invideo", date: "21 May 2026" },
     { text: "Thank you for the fast turnaround, everything got approved!", date: "23 Apr 2026" },
@@ -198,9 +204,10 @@ document.addEventListener("click", (e) => {
 // A message the client sent, shown the way it looked in the chat: picture, name, date, words.
 function messageCard(m, g) {
   const card = el("figure", "msg");
-  const av = el("img", "msg__av"); av.src = `/avatars/${(g.avatars || [])[0]}.jpg`; av.alt = ""; av.width = 32; av.height = 32; av.decoding = "async";
+  // A message can come from a person rather than the client account (e.g. a studio's founder).
+  const av = el("img", "msg__av"); av.src = `/avatars/${m.avatar || (g.avatars || [])[0]}.jpg`; av.alt = ""; av.width = 32; av.height = 32; av.decoding = "async"; av.draggable = false;
   const body = el("div", "msg__body");
-  const head = el("p", "msg__head"); head.append(el("strong", null, g.name), el("time", null, m.date));
+  const head = el("p", "msg__head"); head.append(el("strong", null, m.from || g.name), el("time", null, m.date));
   body.append(head, el("blockquote", "msg__text", m.text));
   card.append(av, body);
   return card;
