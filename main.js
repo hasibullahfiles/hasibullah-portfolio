@@ -884,15 +884,18 @@ if (form) {
   });
 })();
 
-/* ---------- About: Md's photo follows the cursor while it is over his name ----------
+/* ---------- About: a photo follows the cursor over Md's name (his photo) and over each client name (theirs) ----------
    It grows out of the cursor, trails it on a soft spring with a slight tilt in the direction of travel,
    and shrinks back into the cursor on leave. Pointer devices only; no movement under reduced motion. */
 (() => {
-  const name = document.querySelector(".hover-me");
-  if (!name || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+  // Md's own name shows his photo; each client name on About shows that client's picture (data-photo).
+  const names = [...document.querySelectorAll(".hover-me, [data-photo]")];
+  if (!names.length || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+  const photoOf = (n) => n.dataset.photo || "/avatars/hasibullah_shanto.jpg";
+  [...new Set(names.map(photoOf))].forEach((src) => { const pre = new Image(); pre.src = src; });   // no blank frame on first hover
   const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const img = el("img", "cursor-photo");
-  img.src = "/avatars/hasibullah_shanto.jpg"; img.alt = ""; img.setAttribute("aria-hidden", "true"); img.decoding = "async";
+  img.alt = ""; img.setAttribute("aria-hidden", "true"); img.decoding = "async";
   document.body.append(img);
   let tx = 0, ty = 0, x = 0, y = 0, show = 0, want = 0, tilt = 0, raf = 0;
   const frame = () => {
@@ -907,11 +910,14 @@ if (form) {
     raf = moving ? requestAnimationFrame(frame) : 0;
   };
   const run = () => { if (!raf) raf = requestAnimationFrame(frame); };
-  name.addEventListener("pointerenter", (e) => {
-    if (show < 0.03) { x = tx = e.clientX; y = ty = e.clientY; }   // appear from where the cursor is
-    want = 1; run();
-  });
-  name.addEventListener("pointermove", (e) => { tx = e.clientX; ty = e.clientY; run(); });
-  name.addEventListener("pointerleave", () => { want = 0; run(); });
+  for (const name of names) {
+    name.addEventListener("pointerenter", (e) => {
+      img.src = photoOf(name);
+      if (show < 0.03) { x = tx = e.clientX; y = ty = e.clientY; }   // appear from where the cursor is
+      want = 1; run();
+    });
+    name.addEventListener("pointermove", (e) => { tx = e.clientX; ty = e.clientY; run(); });
+    name.addEventListener("pointerleave", () => { want = 0; run(); });
+  }
   window.addEventListener("scroll", () => { if (want) { want = 0; run(); } }, { passive: true });
 })();
