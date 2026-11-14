@@ -15,7 +15,7 @@ const GROUPS = [
     videos: [["DeBvhCLy_g9", 556000, "Ben Aizen"], ["De-2bbIv9ys", 90900, "Roman"], ["DRy81QPkrN1", 17900, "Baurjan Tulegenov"],["o8S4qdbACLA", null, "Marisa", "https://www.youtube.com/shorts/o8S4qdbACLA"], ["DVqc2B1AfKr", 2432, "Md Arif Hasnat"], ["DFYYiZxNKpO", 831000, "Cole Gonzales"], ["DWWwD1MjXKq", 5926, "Saturate"]] },
   { id: "think-studio", group: true, cat: "Agency", name: "Think Studio", handle: "thinkstudioau", avatars: ["thinkstudioau", "sonnybillwilliams", "unitedmuslimsofaustralia", "islamophobiaregisteraus"],
     videos: [["DMfF8FMxQnp", 1000000, "Sonny Bill Williams"], ["DPOIQcVkq83", 60800, "United Muslims of Australia"], ["DK_n7QsyRq0", 52300, "Think Studio"], ["Db7uiUoxQGb", 32400, "Islamophobia Register"], ["DGxkAHKSLau", 32100, "United Muslims of Australia"], ["DV3Mxsmjzr_", 23900, "Islamophobia Register"], ["DPQz6LVDSNM", 4608, "United Muslims of Australia"]] },
-  { id: "50blvd", group: true, cat: "Agency", name: "50 Blvd", handle: "interceptorfilms", avatars: ["50blvd"],
+  { id: "50blvd", group: true, cat: "Agency", name: "50 Blvd", handle: "interceptorfilms", avatars: ["50blvd", "calhunter", "andregrenville"],
     videos: [["blvd-tavus-phoenix-4-launch", null, "Tavus Phoenix-4 Launch", ""], ["blvd-ergo-v2", null, "Ergo", ""], ["blvd-oasiz-ai-1", null, "Oasiz AI", ""], ["blvd-virtue-ai-company-overview-video-updated", null, "Virtue AI Company Overview", ""], ["blvd-virtue-ai-demo-video", null, "Virtue AI Demo", ""], ["blvd-virtue-ai-tradewinds-video", null, "Virtue AI Tradewinds", ""]] },
   { id: "gian", group: true, cat: "Agency", name: "Aliens Create", handle: "alienscreate", avatars: ["alienscreate"],
     videos: [["gian-3-scoopy-dogs", null, "Scoopy Dogs", ""], ["gian-5g-auto-trade-not-edited", null, "5G Auto Trade", ""], ["gian-andres-torrente-ad-2", null, "Andres Torrente", ""], ["gian-andres-torrente-ad-with-music", null, "Andres Torrente", ""], ["gian-azurri-pest-control", null, "Azurri Pest Control", ""], ["gian-bin-blasters", null, "Bin Blasters", ""], ["gian-brightology", null, "Brightology", ""], ["gian-elixir", null, "Elixir", ""], ["gian-fence-solution", null, "Fence Solution", ""], ["gian-lets-go-glass", null, "Let's Go Glass", ""], ["gian-lj-cleaning", null, "LJ Cleaning", ""], ["gian-mmff-version-2", null, "MMFF", ""], ["gian-mobile-veterinary-ad-vocal", null, "Mobile Veterinary", ""], ["gian-save-on-cleaners", null, "Save On Cleaners", ""], ["gian-second-ad", null, "Second Ad", ""], ["gian-smart-eagle-version-2", null, "Smart Eagle", ""], ["gian-viavan-with-music", null, "Viavan", ""], ["gian-washing-guru-ad-version-2", null, "Washing Guru", ""]] },
@@ -35,7 +35,7 @@ const GROUPS = [
 const AV_NAMES = {
   marisa: "Marisa", artzenmedia: "Ben Aizen", baurrovski: "Baurjan Tulegenov", colewherld: "Cole Gonzales",
   shootsroman: "Roman", hasnatcreates: "Md Arif Hasnat", "saturate.be": "Saturate",
-  thinkstudioau: "Think Studio", sonnybillwilliams: "Sonny Bill Williams",
+  thinkstudioau: "Think Studio", "50blvd": "50 Blvd", calhunter: "Cal Hunter", andregrenville: "Andre Grenville", sonnybillwilliams: "Sonny Bill Williams",
   unitedmuslimsofaustralia: "United Muslims of Australia", islamophobiaregisteraus: "Islamophobia Register",
 };
 
@@ -112,14 +112,19 @@ const MESSAGES = {
   ],
   // Gian Macrobio (Aliens Create) sent a video testimonial (6 Apr 2026).
   gian: [
+    { from: "Gian Macrobio", avatar: "alienscreate", date: "1 Mar 2026", text: "Thank you brooo you are a killer 🔥" },
     { from: "Gian Macrobio", avatar: "alienscreate", date: "6 Apr 2026", video: "/videos/gian-testimonial.mp4", poster: "/covers/gian-testimonial.jpg" },
+    { from: "Gian Macrobio", avatar: "alienscreate", date: "6 Apr 2026", text: "I've been working with Hasibullah for already like six months, and the work he's doing is extremely, extremely good. I'm a video producer, so sometimes I need too much help with editing, and he's the man. He's the guy." },
+    { from: "Gian Macrobio", avatar: "alienscreate", date: "6 Apr 2026", text: "My clients are very happy, and it's awesome. He always responds fast. He works very fast. He works professional. Everything. So I 100% recommend Hasibullah." },
+    { from: "Gian Macrobio", avatar: "alienscreate", date: "8 Apr 2026", text: "Top notch!" },
+    { from: "Gian Macrobio", avatar: "alienscreate", date: "8 Mar 2026", text: "incredibleeeeee" },
   ],
   "50blvd": [
-    { from: "Cal Hunter", avatar: "50blvd", date: "27 Jan 2026", text: "Always love that you get the animations to match their branding so thanks again for that!" },
-    { from: "Cal Hunter", avatar: "50blvd", date: "27 Jan 2026", text: "Hey MD! Just reviewed the Virtue AI video! Good selects on the interview! I think you made some great choices" },
-    { from: "Cal Hunter", avatar: "50blvd", date: "19 Dec 2025", text: "MD the Goat🐐 per usual" },
-    { from: "Andre Grenville", avatar: "50blvd", date: "19 Dec 2025", text: "MD you cooked" },
-    { from: "Andre Grenville", avatar: "50blvd", date: "21 Jun 2026", text: "It looks great. Client loved it" },
+    { from: "Cal Hunter", avatar: "calhunter", date: "27 Jan 2026", text: "Always love that you get the animations to match their branding so thanks again for that!" },
+    { from: "Cal Hunter", avatar: "calhunter", date: "27 Jan 2026", text: "Hey MD! Just reviewed the Virtue AI video! Good selects on the interview! I think you made some great choices" },
+    { from: "Cal Hunter", avatar: "calhunter", date: "19 Dec 2025", text: "MD the Goat🐐 per usual" },
+    { from: "Andre Grenville", avatar: "andregrenville", date: "19 Dec 2025", text: "MD you cooked" },
+    { from: "Andre Grenville", avatar: "andregrenville", date: "21 Jun 2026", text: "It looks great. Client loved it" },
   ],
   launch: [
     { from: "Baurjan Tulegenov, Quantora", avatar: "baurrovski", date: "5 Jan 2026", text: "my man Hasibullah is a magician" },
