@@ -13,7 +13,7 @@ import path from "node:path";
 const SITE = "https://hasibullahshanto.com";
 const root = path.resolve(import.meta.dirname, "..");
 const out = path.resolve(root, process.argv[2] || "_site");
-const SKIP = new Set([".git", ".github", ".gitignore", ".claude", "_site", "tools", ".DS_Store", "testimonials.md"]);
+const SKIP = new Set([".git", ".github", ".gitignore", ".claude", "_site", "tools", ".DS_Store", "testimonials.md", "_voice_src"]);
 
 fs.rmSync(out, { recursive: true, force: true });
 for (const name of fs.readdirSync(root)) {

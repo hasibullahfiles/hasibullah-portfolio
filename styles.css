@@ -656,3 +656,52 @@ html { background: var(--bg); }
   pointer-events: none; opacity: 0; transform-origin: 50% 100%; will-change: transform, opacity;
   box-shadow: 0 14px 36px rgba(0, 0, 0, 0.18);
 }
+
+/* Testimonials under a client's social icons: voice notes as message-app audio bubbles, then their messages */
+:root { --bubble: #e9e9eb; --bubble-ink: #1c1c1e; --bubble-faint: rgba(28, 28, 30, 0.28); }
+:root[data-theme="dark"] { --bubble: #26262a; --bubble-ink: #f2f2f2; --bubble-faint: rgba(242, 242, 242, 0.3); }
+.tmon { display: grid; gap: 8px; justify-items: start; margin-top: clamp(22px, 3.5vh, 32px); }
+.vb {
+  position: relative; display: flex; align-items: center; gap: 10px; width: min(100%, 248px);
+  padding: 7px 14px 7px 7px; border-radius: 20px; background: var(--bubble); color: var(--bubble-ink);
+}
+.vb::before {                                   /* the bubble's tail, bottom left */
+  content: ""; position: absolute; left: -5px; bottom: 0; width: 14px; height: 14px;
+  background: var(--bubble); border-bottom-right-radius: 12px 10px;
+  clip-path: path("M 14 0 L 14 14 L 0 14 C 4 13 6 10 6 4 Z");
+}
+.vb:has(+ .vb)::before { display: none; }   /* like a message thread: only the last bubble in a run has the tail */
+.vb__play {
+  flex: none; display: grid; place-items: center; width: 30px; height: 30px; padding: 0; border: 0; border-radius: 50%;
+  background: var(--bubble-ink); color: var(--bubble); cursor: pointer; transition: transform 140ms var(--ease-out);
+}
+.vb__play svg { width: 14px; height: 14px; fill: currentColor; }
+.vb__play:active { transform: scale(0.92); }
+.vb__i-pause, .vb.is-playing .vb__i-play { display: none; }
+.vb.is-playing .vb__i-pause { display: inline; }
+.vb__wave { flex: 1; display: flex; align-items: center; gap: 2px; height: 26px; cursor: pointer; }
+.vb__wave i {
+  flex: 1; min-width: 2px; max-width: 3px; height: calc(4px + var(--h) * 22px); border-radius: 2px;
+  background: var(--bubble-faint); transition: background-color 120ms linear;
+}
+.vb__wave i.is-on { background: var(--bubble-ink); }
+.vb__time { flex: none; font-size: 0.75rem; font-variant-numeric: tabular-nums; color: var(--bubble-ink); opacity: 0.7; min-width: 30px; text-align: right; }
+.msg {
+  display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 10px; width: 100%; margin: 0;
+  padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg);
+}
+.msg:first-of-type, .vb + .msg { margin-top: 12px; }
+.msg__av { width: 32px; height: 32px; border-radius: 7px; object-fit: cover; }
+.msg__head { display: flex; align-items: baseline; gap: 8px; font-size: 0.8125rem; line-height: 1.2; }
+.msg__head strong { font-weight: 600; }
+.msg__head time { font-size: 0.6875rem; color: var(--muted); }
+.msg__text { margin: 4px 0 0; font-size: 0.8125rem; line-height: 1.45; }
+/* The column scrolls on its own when the testimonials make it taller than the screen */
+.project__text:has(.tmon:not([hidden])) { max-height: 100dvh; overflow-y: auto; scrollbar-width: none; padding-bottom: 40px; }
+.project__text:has(.tmon:not([hidden]))::-webkit-scrollbar { display: none; }
+@media (max-width: 700px) {
+  .project__text:has(.tmon:not([hidden])) { max-height: none; overflow: visible; padding-bottom: 0; }
+  .vb { width: min(100%, 280px); }
+}
+@media (prefers-reduced-motion: reduce) { .vb__play, .vb__wave i { transition: none; } }
+@media (max-width: 700px) { .project__media .tmon { margin-top: 32px; } }
