@@ -766,8 +766,11 @@ if (stage) {
   const nowBox = document.getElementById("now"), cta = document.querySelector(".project__contact");
   const place = () => {
     const tm = document.getElementById("tmon");
-    if (phone.matches) { const after = document.getElementById("soon"); after.after(nowBox, cta, tm); }
-    else { document.getElementById("csocials").after(tm); document.getElementById("stage").after(nowBox); aside.append(cta); }
+    // The centred video's platforms and views sit straight under it, above the dots (or under the list).
+    const view = document.querySelector("#stage .car__view");
+    if (view) view.after(nowBox); else document.getElementById("stage").after(nowBox);
+    if (phone.matches) { document.getElementById("soon").after(cta, tm); }
+    else { document.getElementById("csocials").after(tm); aside.append(cta); }
   };
   place();
   phone.addEventListener("change", place);
