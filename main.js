@@ -358,7 +358,7 @@ function openPlayer(r) {
 function frame(r, wide, small) {
   const m = el("span", wide ? "m m--wide" : "m");
   const img = el("img");
-  img.src = small ? `/covers/sm/${r.code}.jpg` : `/covers/${r.code}.jpg`; img.alt = ""; img.decoding = "async"; img.draggable = false;
+  img.src = small ? `/covers/sm/${r.code}.webp` : `/covers/${r.code}.webp`; img.alt = ""; img.decoding = "async"; img.draggable = false;
   m.append(img);
   return m;
 }
@@ -766,11 +766,11 @@ if (stage) {
     if (r.local) {
       const v = el("video");
       v.controls = true; v.playsInline = true; v.preload = "none"; lock(v);
-      v.poster = `/covers/${r.code}.jpg`; v.src = hqOf(r.code);
+      v.poster = `/covers/${r.code}.webp`; v.src = hqOf(r.code);
       v.addEventListener("play", () => { document.querySelectorAll("audio, video").forEach((o) => { if (o !== v) o.pause(); }); setUrl(r); });
       m.append(v);
     } else {
-      const img = el("img"); img.src = `/covers/${r.code}.jpg`; img.alt = ""; m.append(img);
+      const img = el("img"); img.src = `/covers/${r.code}.webp`; img.alt = ""; m.append(img);
     }
     return m;
   };
@@ -796,7 +796,7 @@ if (stage) {
     const car = el("div", "car");
     const track = el("div", "car__track");
     track.tabIndex = 0;
-    track.setAttribute("aria-label", `${g.name} videos`);
+    track.setAttribute("role", "group"); track.setAttribute("aria-label", `${g.name} videos`);
     const slides = list.map((r, i) => {
       const f = el("figure", r.wide ? "slide slide--wide" : "slide");
       f.append(media(r));
@@ -850,8 +850,8 @@ if (stage) {
         dotEls.forEach((d, i) => d.setAttribute("aria-current", i === cur ? "true" : "false"));
         showNow(list[cur]);
         setUrl(list[cur]);
-        // The centred video starts buffering right away, so pressing play starts it at once.
-        const cv = slides[cur].querySelector("video"); if (cv && cv.preload !== "auto") cv.preload = "auto";
+        // The centred video fetches its header right away (a few KB), so pressing play starts quickly without loading the whole file.
+        const cv = slides[cur].querySelector("video"); if (cv && cv.preload === "none") cv.preload = "metadata";
       }
       prev.disabled = cur === 0; next.disabled = cur === slides.length - 1;
     };
@@ -913,6 +913,7 @@ if (stage) {
   const n = document.getElementById("cnext");
   n.href = `/work/${nx.id}`;
   n.querySelector("span").textContent = nx.name;
+  document.body.classList.add("is-built");
 }
 
 /* ---------- Contact: sends the message to Md's inbox ----------
@@ -1182,6 +1183,8 @@ if (form) {
   }
   window.addEventListener("scroll", () => { if (want) { want = 0; run(); } }, { passive: true });
 })();
+
+window.addEventListener("load", () => document.body.classList.add("is-built"));   // safety net for the reveal above
 
 /* ---------- Pages open instantly ----------
    Chrome renders a page in the background as soon as the pointer rests on its link (speculation rules),

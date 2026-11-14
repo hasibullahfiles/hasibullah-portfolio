@@ -754,3 +754,9 @@ html { background: var(--bg); }
 .profile__quote p { margin: 0; }
 .profile__quote cite { display: block; font-style: normal; color: var(--muted); font-size: 0.8125rem; margin-top: 2px; }
 .profile__q { font-size: 1rem; font-weight: 500; margin: 18px 0 4px; }
+
+/* Client pages build their layout in script: stay hidden until it is in place, so nothing jumps on screen. */
+body:not(.is-built) .project__text, body:not(.is-built) .project__media { visibility: hidden; }
+/* Comfortable tap areas for the platform icons under a video (24px) without changing how they look. */
+.stats__link { padding: 5px; margin: -5px -2px; }
+@media (max-width: 700px) { .car__dots { gap: 14px; } }
