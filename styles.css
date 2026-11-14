@@ -739,3 +739,9 @@ html { background: var(--bg); }
 /* The creator's name beside the views under the centred video (More creators, Think Studio). */
 .now__who { color: var(--ink); font-size: 0.8125rem; font-weight: 500; }
 .car .now #nowstats, .project__media .now #nowstats { display: inline-flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center; }
+
+/* Platform icons under a video open that post. */
+.stats__link { display: inline-flex; border-radius: 4px; transition: opacity 160ms var(--ease-out), transform 160ms var(--ease-out); }
+@media (hover: hover) and (pointer: fine) { .stats__link:hover { opacity: 0.6; } }
+.stats__link:active { transform: scale(0.92); }
+.stats__link:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }

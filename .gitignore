@@ -5,3 +5,4 @@ testimonials.md
 _voice_src/
 *.m4a
 !audio/*.m4a
+videos_hq/
