@@ -731,8 +731,9 @@ html { background: var(--bg); }
 
 /* Stacked pictures: the first sits on top (z-index set in main.js); the one under the pointer rises above
    the rest, and its name fades in over it. */
-.wrow__avs .av, .pavs .av { position: relative; }
-.av.av--up { z-index: 50 !important; }
+.wrow__avs .av, .pavs .av { position: relative; transition: transform 320ms var(--ease-out), margin-left 280ms var(--ease-out); }
+/* The picture after the hovered one slides right until the hovered face is fully uncovered. */
+.wrow__avs .av.av--open + .av, .pavs--many .av.av--open + .av { margin-left: 3px; }
 .avname {
   position: fixed; left: 0; top: 0; z-index: 1000; pointer-events: none; white-space: nowrap;
   font: 500 0.75rem/1 var(--font); color: var(--bg); background: var(--ink); padding: 6px 9px; border-radius: 6px;

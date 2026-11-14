@@ -10,11 +10,15 @@ const GROUPS = [
   { id: "tommy", cat: "Creators", name: "Tommy Geoco", handle: "itsdesignertom", reach: { instagram: 280000, tiktok: 487200, youtube: 170000, x: 20000 }, avatars: ["itsdesignertom"],
     videos: [["DfC3_uyAuWY", 159000], ["Dc_mgAvu1sw", 31000], ["DcyrXDSJNMK", 30800], ["Dd_95hIJXv1", 11800], ["Dc4iVrPhb7p", 8747], ["DdGk0maRsas", 8059], ["Dcgy5iihDyn", 7737]] },
   { id: "daniel-do", cat: "Creators", name: "Daniel Do", handle: "justdodani", reach: { instagram: 287000, tiktok: 213200 }, avatars: ["justdodani"],
-    videos: [["DXewADRio3K", 269000], ["DOb2Co7jLV3", 173000], ["DZdEccwMUZw", 146000], ["DOjJJ_jjMEQ", 46700], ["DXcvb6iEm0e", 27100], ["DQMkPPLDMqR", 25000], ["DXcPeKYCl8l", 22300], ["DRR7k-IjABe", 19900], ["DZI0BsiswX9", 15600], ["DRXutlkDP-x", 15200]] },   // top 10 by Instagram views, read 15 Nov 2026
-  { id: "creators", group: true, cat: "Creators", name: "More creators", reach: { instagram: 538862, tiktok: 5400000 /* TikTok: Cole Gonzales, 5.4M, read 15 Nov 2026 */ }, avatars: ["marisa", "artzenmedia", "baurrovski", "colewherld", "shootsroman", "hasnatcreates"],
+    videos: [["DPbyCQvjMbz", 459000], ["DXewADRio3K", 269000], ["DOb2Co7jLV3", 173000], ["DZdEccwMUZw", 146000], ["DOjJJ_jjMEQ", 46700], ["DXcvb6iEm0e", 27100], ["DQMkPPLDMqR", 25000], ["DXcPeKYCl8l", 22300], ["DRR7k-IjABe", 19900], ["DZI0BsiswX9", 15600], ["DRXutlkDP-x", 15200]] },   // top 10 by Instagram views, read 15 Nov 2026
+  { id: "creators", group: true, cat: "Creators", name: "More creators", reach: { instagram: 538862, tiktok: 5400000 /* TikTok: Cole Gonzales, 5.4M, read 15 Nov 2026 */ }, avatars: ["hasnatcreates", "saturate.be", "shootsroman", "colewherld", "baurrovski", "artzenmedia", "marisa"],
     videos: [["DeBvhCLy_g9", 556000, "Ben Aizen"], ["De-2bbIv9ys", 90900, "Roman"], ["DRy81QPkrN1", 17900, "Baurjan Tulegenov"],["o8S4qdbACLA", null, "Marisa", "https://www.youtube.com/shorts/o8S4qdbACLA"], ["DVqc2B1AfKr", 2432, "Md Arif Hasnat"], ["DFYYiZxNKpO", 831000, "Cole Gonzales"], ["DWWwD1MjXKq", 5926, "Saturate"]] },
   { id: "think-studio", group: true, cat: "Agency", name: "Think Studio", handle: "thinkstudioau", avatars: ["thinkstudioau", "sonnybillwilliams", "unitedmuslimsofaustralia", "islamophobiaregisteraus"],
     videos: [["DMfF8FMxQnp", 1000000, "Sonny Bill Williams"], ["DPOIQcVkq83", 60800, "United Muslims of Australia"], ["DK_n7QsyRq0", 52300, "Think Studio"], ["Db7uiUoxQGb", 32400, "Islamophobia Register"], ["DGxkAHKSLau", 32100, "United Muslims of Australia"], ["DV3Mxsmjzr_", 23900, "Islamophobia Register"], ["DPQz6LVDSNM", 4608, "United Muslims of Australia"]] },
+  { id: "50blvd", group: true, cat: "Agency", name: "50 Blvd", handle: "interceptorfilms", avatars: ["50blvd"],
+    videos: [["blvd-ergo-1st-draft", null, "Ergo 1st draft", ""], ["blvd-ergo-v2", null, "Ergo V2", ""], ["blvd-oasiz-ai-1", null, "Oasiz AI 1", ""], ["blvd-virtue-ai-company-overview-video-updated", null, "Virtue AI \u2014 Company Overview Video (updated)", ""], ["blvd-virtue-ai-company-overview-video-v2", null, "Virtue AI \u2014 Company Overview Video (v2)", ""], ["blvd-virtue-ai-demo-video", null, "Virtue AI \u2014 Demo Video", ""], ["blvd-virtue-ai-tradewinds-video", null, "Virtue AI \u2014 Tradewinds Video", ""]] },
+  { id: "gian", group: true, cat: "Agency", name: "Gian", avatars: ["gian"],
+    videos: [["gian-2-scoopy-dogs", null, "Scoopy Dogs", ""], ["gian-3-scoopy-dogs", null, "Scoopy Dogs", ""], ["gian-5g-auto-trade-not-edited", null, "5G Auto Trade Not edited", ""], ["gian-andres-torrente-ad-2", null, "Andres Torrente AD 2", ""], ["gian-andres-torrente-ad-with-music", null, "Andres Torrente AD with music", ""], ["gian-andres-torrente-ad", null, "Andres Torrente AD", ""], ["gian-azurri-pest-control", null, "Azurri Pest Control", ""], ["gian-bin-blasters-no-music", null, "Bin Blasters - no music", ""], ["gian-bin-blasters", null, "Bin Blasters", ""], ["gian-brightology", null, "Brightology", ""], ["gian-elixir", null, "Elixir", ""], ["gian-fence-solution", null, "Fence Solution", ""], ["gian-lets-go-glass", null, "LETS GO GLASS", ""], ["gian-lj-cleaning", null, "LJ Cleaning", ""], ["gian-mmff-version-2", null, "MMFF - version 2", ""], ["gian-mmff", null, "MMFF", ""], ["gian-mobile-veterinary-ad-vocal", null, "Mobile Veterinary AD vocal", ""], ["gian-no-music-save-on-cleaners", null, "No Music- Save On Cleaners", ""], ["gian-no-music-washing-guru-ad", null, "No Music- Washing Guru Ad", ""], ["gian-save-on-cleaners", null, "Save On Cleaners", ""], ["gian-second-ad", null, "Second Ad", ""], ["gian-smart-eagle-version-1", null, "Smart Eagle - version 1", ""], ["gian-smart-eagle-version-2", null, "Smart Eagle - version 2", ""], ["gian-viavan-with-music", null, "Viavan with music", ""], ["gian-washing-guru-ad-version-2", null, "Washing Guru Ad - version 2", ""], ["gian-washing-guru-ad", null, "Washing Guru Ad", ""], ["gian-without-music-mmff", null, "Without Music MMFF", ""]] },
   { id: "higgsfield", cat: "Brand partnerships", name: "Higgsfield", handle: "higgsfield.ai", reach: { instagram: 2000000, youtube: 529000, x: 255700 }, avatars: ["higgsfield.ai"],
     videos: [["Da8CmrlyVYc", 83800], ["DbLn3AFymYy", 78400], ["Dd6h-e1BIfA", 58200]] },
   { id: "invideo", cat: "Brand partnerships", name: "Invideo AI", handle: "invideo.io", reach: { instagram: 579000, x: 37800 }, avatars: ["invideo.io"],
@@ -106,6 +110,19 @@ const MESSAGES = {
     { who: "Saturate", from: "Noah Stupers", avatar: "saturate.be", date: "15 Mar 2026", text: "I appreciate your hard work brother - crazy talented guy" },
     { who: "Saturate", from: "Noah Stupers", avatar: "saturate.be", date: "15 Mar 2026", text: "Yes man, thank you for this 🙏 worth every dollar" },
   ],
+  // Gian's video testimonial (6 Apr 2026), in his own words; the name heard as "Hasibula" is written properly.
+  gian: [
+    { from: "Gian", avatar: "gian", date: "6 Apr 2026", text: "I've been working with Hasibullah for already like six months, and the work he's doing is extremely, extremely good. I'm a video producer, so sometimes I need too much help with editing, and he's the man. He's the guy." },
+    { from: "Gian", avatar: "gian", date: "6 Apr 2026", text: "My clients are very happy, and it's awesome. He always responds fast. He works very fast. He works professional. Everything. So I 100% recommend Hasibullah." },
+    { from: "Gian", avatar: "gian", date: "8 Apr 2026", text: "Top notch!" },
+  ],
+  "50blvd": [
+    { from: "Cal Hunter", avatar: "50blvd", date: "27 Jan 2026", text: "Always love that you get the animations to match their branding so thanks again for that!" },
+    { from: "Cal Hunter", avatar: "50blvd", date: "27 Jan 2026", text: "Hey MD! Just reviewed the Virtue AI video! Good selects on the interview! I think you made some great choices" },
+    { from: "Cal Hunter", avatar: "50blvd", date: "19 Dec 2025", text: "MD the Goat🐐 per usual" },
+    { from: "Andre Grenville", avatar: "50blvd", date: "19 Dec 2025", text: "MD you cooked" },
+    { from: "Andre Grenville", avatar: "50blvd", date: "21 Jun 2026", text: "It looks great. Client loved it" },
+  ],
   launch: [
     { from: "Baurjan Tulegenov, Quantora", avatar: "baurrovski", date: "5 Jan 2026", text: "my man Hasibullah is a magician" },
     { from: "Baurjan Tulegenov, Quantora", avatar: "baurrovski", date: "5 Jan 2026", text: "nobody better for the job" },
@@ -141,9 +158,10 @@ const el = (tag, cls, text) => {
 const total = (code, views) => (views || 0) + Object.values(ELSEWHERE[code] || {}).reduce((a, b) => a + b, 0);
 const items = (groups) => groups.flatMap((g) => g.videos.map(([code, views, label, url]) => ({
   code, views: total(code, views) || null, label, group: g,
-  platforms: [url && url.includes("youtube") ? "youtube" : "instagram", ...Object.keys(ELSEWHERE[code] || {})].filter((p, i, a) => a.indexOf(p) === i),
+  // url "" marks work that is not posted anywhere public (agency deliveries): no platform icon, no outside link.
+  platforms: url === "" ? [] : [url && url.includes("youtube") ? "youtube" : "instagram", ...Object.keys(ELSEWHERE[code] || {})].filter((p, i, a) => a.indexOf(p) === i),
   who: label || g.name,
-  url: url || `https://www.instagram.com/reel/${code}/`,
+  url: url === "" ? "" : url || `https://www.instagram.com/reel/${code}/`,
   local: !!LOCAL[code],
   wide: FORCE_WIDE.has(code) || (LOCAL[code] ? LOCAL[code][0] > LOCAL[code][1] : false),
 })));
@@ -289,7 +307,7 @@ function frame(r, wide, small) {
 }
 function link(r, cls) {
   const a = el("a", cls);
-  a.href = r.url; a.target = "_blank"; a.rel = "noopener";
+  if (r.url) { a.href = r.url; a.target = "_blank"; a.rel = "noopener"; } else a.href = `/work/${r.group.id}/${r.code}`;
   a.dataset.code = r.code; a.draggable = false;
   return a;
 }
@@ -548,10 +566,10 @@ if (canvas) {
 }
 
 /* ---------- Work: clients as a ruled list, grouped by kind ---------- */
-// In a stack the first picture sits on top, so the first one listed is always fully visible.
+// In a stack each picture overlaps the one before it, so the last one listed is fully visible.
 const avatarsOf = (g) => (g.avatars || []).map((h, k, all) => {
   const i = el("img", "av"); i.src = `/avatars/${h}.jpg`; i.alt = AV_NAMES[h] || ""; i.decoding = "async"; i.width = 150; i.height = 150;
-  if (all.length > 1) { i.style.zIndex = String(all.length - k); if (AV_NAMES[h]) i.dataset.name = AV_NAMES[h]; }
+  if (all.length > 1 && AV_NAMES[h]) i.dataset.name = AV_NAMES[h];
   return i;
 });
 const worklist = document.getElementById("worklist");
@@ -1085,21 +1103,21 @@ if (form) {
 })();
 
 /* ---------- Names on stacked pictures ----------
-   In a stack of pictures (More creators, Think Studio), pointing at one brings it to the top and
-   its name fades in just above it; moving off fades the name out and the picture settles back. */
+   In a stack of pictures (More creators, Think Studio), pointing at one makes the pictures after it
+   slide aside, so it is uncovered without jumping over the others, and its name fades in above it. */
 (() => {
   if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
   const tag = el("div", "avname"); tag.setAttribute("aria-hidden", "true");
   document.body.append(tag);
   let on = null;
-  const hide = () => { if (on) { on.classList.remove("av--up"); on = null; } tag.classList.remove("is-on"); };
+  const hide = () => { if (on) { on.classList.remove("av--open"); on = null; } tag.classList.remove("is-on"); };
   document.addEventListener("pointerover", (e) => {
     const av = e.target.closest && e.target.closest("img.av[data-name]");
     if (!av) return;
-    if (on && on !== av) on.classList.remove("av--up");
-    on = av; av.classList.add("av--up");
+    if (on && on !== av) on.classList.remove("av--open");
+    on = av; av.classList.add("av--open");
     tag.textContent = av.dataset.name;
-    const b = av.getBoundingClientRect();
+    const b = av.getBoundingClientRect();   // the hovered picture stays put; only the ones after it move
     tag.style.left = `${b.left + b.width / 2}px`; tag.style.top = `${b.top - 8}px`;
     tag.classList.add("is-on");
   });
