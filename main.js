@@ -113,25 +113,6 @@ function stats(r) {
 
 /* ---------- Every video has its own address: /work/<client>/<Instagram code> ---------- */
 const linkOf = (r) => `/work/${r.group.id}/${r.code}`;
-const SHARE_ORIGIN = "https://hasibullahshanto.com";
-// Copies the video's link (or opens the phone's share sheet) and says so on the button for a moment.
-async function shareVideo(r, btn) {
-  const url = SHARE_ORIGIN + linkOf(r);
-  const say = (t) => { const was = btn.dataset.label || btn.textContent; btn.dataset.label = was; btn.textContent = t; clearTimeout(btn._t); btn._t = setTimeout(() => { btn.textContent = was; }, 1600); };
-  try {
-    if (navigator.share && window.matchMedia("(pointer: coarse)").matches) { await navigator.share({ title: r.who, url }); return; }
-    await navigator.clipboard.writeText(url);
-    say("Link copied");
-  } catch (e) {
-    if (e && e.name === "AbortError") return;
-    window.prompt("Copy this link", url);
-  }
-}
-const shareButton = (getVideo) => {
-  const b = el("button", "share", "Copy link"); b.type = "button";
-  b.addEventListener("click", () => shareVideo(getVideo(), b));
-  return b;
-};
 
 /* ---------- Player ---------- */
 let player;
@@ -149,8 +130,6 @@ function openPlayer(r) {
       if (history.state && history.state.video) history.back();
     });
     window.addEventListener("popstate", () => { if (player.open && !(history.state && history.state.video)) player.close(); });
-    const share = shareButton(() => player._video);
-    player.querySelector(".player__meta").append(share);
     player.querySelector(".player__close").addEventListener("click", () => player.close());
     player.addEventListener("click", (e) => { if (e.target === player || e.target.classList.contains("player__in")) player.close(); });
   }
@@ -164,7 +143,6 @@ function openPlayer(r) {
   c.href = `/work/${r.group.id}`;
   c.removeAttribute("target");
   // The address bar shows this video's own link while it plays, so it can be copied and sent as is.
-  player._video = r;
   if (!player.open) player._title = document.title;
   document.title = r.who;
   if (location.pathname !== linkOf(r)) {
@@ -474,7 +452,6 @@ if (stage) {
     history.replaceState(null, "", linkOf(r));
     document.title = r.who;
   };
-  let current = list[start];
   document.title = g.name;
   document.getElementById("cname").textContent = g.name;
   const avBox = document.getElementById("cavs");
@@ -517,16 +494,12 @@ if (stage) {
   // Details of the video currently in the centre.
   const now = { note: document.getElementById("nownote"), stats: document.getElementById("nowstats") };
   const showNow = (r) => {
-    current = r;
     now.note.textContent = noteOf(r.code);
     now.note.hidden = !noteOf(r.code);
     now.stats.replaceChildren(stats(r));
     nameEls.forEach((b, n) => b.setAttribute("aria-current", n === r.who ? "true" : "false"));
   };
-  if (list.length) {
-    showNow(list[start]);
-    document.getElementById("now").append(shareButton(() => current));
-  } else document.getElementById("now").hidden = true;
+  if (list.length) showNow(list[start]); else document.getElementById("now").hidden = true;
 
   // One inline video. Starting one pauses any other.
   const media = (r) => {
@@ -551,7 +524,7 @@ if (stage) {
       const text = el("div", "lrow__text");
       text.append(el("h2", null, r.who));
       if (NOTES[r.code]) text.append(el("p", "lrow__note", NOTES[r.code]));
-      text.append(stats(r), shareButton(() => r));
+      text.append(stats(r));
       row.id = r.code;
       row.append(text, media(r));
       stage.append(row);
