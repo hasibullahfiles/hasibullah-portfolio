@@ -605,11 +605,15 @@ if (stage) {
   n.querySelector("span").textContent = nx.name;
 }
 
-/* ---------- Contact: writes the message into an email ---------- */
+/* ---------- Contact: sends the message to Md's inbox ----------
+   Posts to FormSubmit, which emails each submission to the address in data-to.
+   If the service can't be reached, it falls back to opening the visitor's email app. */
 const form = document.getElementById("brief");
 if (form) {
   const error = document.getElementById("form-error");
-  form.addEventListener("submit", (e) => {
+  const done = document.getElementById("form-done");
+  const send = form.querySelector('button[type="submit"]');
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
     let ok = true;
     for (const f of form.querySelectorAll("[required]")) {
@@ -620,10 +624,34 @@ if (form) {
     error.hidden = ok;
     if (!ok) { form.querySelector('[aria-invalid="true"]').focus(); return; }
     const d = new FormData(form);
+    if (d.get("_honey")) return;  // filled only by spam bots
     const to = form.dataset.to;
-    const subject = `Edit enquiry from ${d.get("name")}`;
-    const body = `Name: ${d.get("name")}\nEmail: ${d.get("email")}\nWhatsApp: ${d.get("whatsapp") ? `${d.get("dial")} ${d.get("whatsapp")}` : "Not given"}\nNeed: ${d.get("need") || "Not chosen"}\n\n${d.get("brief")}`;
-    window.location.href = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const whatsapp = d.get("whatsapp") ? `${d.get("dial")} ${d.get("whatsapp")}` : "Not given";
+    const subject = `New project enquiry from ${d.get("name")}`;
+    const fields = {
+      Name: d.get("name"), Email: d.get("email"), WhatsApp: whatsapp,
+      "What they need": d.get("need") || "Not chosen", Project: d.get("brief"),
+      Page: location.href,
+    };
+    send.disabled = true; send.dataset.label = send.dataset.label || send.textContent; send.textContent = "Sending";
+    try {
+      const res = await fetch(`https://formsubmit.co/ajax/${to}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ ...fields, _subject: subject, _replyto: d.get("email"), _template: "table", _captcha: "false" }),
+      });
+      const out = await res.json().catch(() => ({}));
+      if (!res.ok || String(out.success) !== "true") throw new Error(out.message || "send failed");
+      form.hidden = true;
+      done.hidden = false;
+      done.focus();
+    } catch (err) {
+      // Fallback: the visitor's own email app, pre-filled.
+      const body = Object.entries(fields).map(([k, v]) => `${k}: ${v}`).join("\n");
+      window.location.href = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    } finally {
+      send.disabled = false; send.textContent = send.dataset.label;
+    }
   });
 }
 
@@ -801,4 +829,10 @@ if (cal) {
     if (saved) return;
     root.dataset.theme = e.matches ? "dark" : "light"; sync();
   });
+})();
+
+/* ---------- One canonical address for search engines (both domains serve the same site) ---------- */
+(() => {
+  const link = document.querySelector('link[rel="canonical"]') || document.head.appendChild(Object.assign(document.createElement("link"), { rel: "canonical" }));
+  link.href = "https://hasibullahshanto.com" + location.pathname.replace(/index\.html$/, "") + location.search;
 })();

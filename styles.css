@@ -601,3 +601,9 @@ html { background: var(--bg); }
   .wrow .wrow__avs:has(.av + .av) .av { width: 32px; height: 32px; }
   .wrow .wrow__avs:has(.av + .av) .av + .av { margin-left: -13px; }
 }
+
+/* Contact: spam trap (never visible) and the sent confirmation */
+.hp { position: absolute !important; left: -9999px !important; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.form-done { padding: 8px 0 24px; outline: 0; }
+.form-done .sub { margin-top: 12px; }
+.btn:disabled { opacity: 0.55; cursor: default; }
