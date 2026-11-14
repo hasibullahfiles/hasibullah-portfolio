@@ -354,25 +354,41 @@ if (canvas) {
     }
   }
 
-  // Testimonials (voice notes and messages) placed between rows of the wider columns, alternating person and
-  // kind, so each one shows once per block and two of the same never sit together.
+  // Testimonials (voice notes and messages) placed between rows of the wider columns, each one next to
+  // that client's own videos: a gap scores for the client's tiles in the rows above and below it and in
+  // the neighbouring columns at the same height, and loses for crowding or repeating the same person.
   const sources = [];
   for (const g of GROUPS) {
     const voices = (typeof VOICES !== "undefined" && VOICES[g.id]) || [];
-    if (voices.length) sources.push(voices.map((v) => () => voiceBubble(v, g, true)));
-    if ((MESSAGES[g.id] || []).length) sources.push(MESSAGES[g.id].map((m) => () => messageCard(m, g)));
+    if (voices.length) sources.push(voices.map((v) => ({ id: g.id, make: () => voiceBubble(v, g, true) })));
+    if ((MESSAGES[g.id] || []).length) sources.push(MESSAGES[g.id].map((m) => ({ id: g.id, make: () => messageCard(m, g) })));
   }
   const notes = [];
   while (sources.some((q) => q.length)) sources.forEach((q) => { if (q.length) notes.push(q.shift()); });
-  const noteCols = [2, 4, 6, 0];                       // the two W columns and the two X columns
+  const noteCols = [0, 2, 4, 6];                       // the two X columns and the two W columns
   const notesAt = plan.map(() => []);
-  // Rotate the column each round so one column never collects the same person, then spread each
-  // column's notes over its gaps (above the first row counts as a gap too).
-  const byCol = noteCols.map(() => []);
-  notes.forEach((make, k) => byCol[(k + Math.floor(k / noteCols.length)) % noteCols.length].push({ make, k }));
-  byCol.forEach((list, j) => {
-    const ci = noteCols[j], gaps = plan[ci].length + 1;
-    list.forEach(({ make, k }, i) => notesAt[ci].push({ after: Math.floor((i * gaps) / list.length) - 1, make, side: (k + ci) % 2 }));
+  const idsIn = (ci, ri) => (plan[ci] && plan[ci][ri] ? plan[ci][ri].map(([r]) => r.group.id) : []);
+  const near = (ci, after) => {
+    const rows = plan[ci].length, own = [...idsIn(ci, after), ...idsIn(ci, after + 1)], side = [];
+    for (const nc of [ci - 1, ci + 1]) {
+      if (!plan[nc]) continue;
+      const at = Math.round(((after + 1) / rows) * plan[nc].length);
+      side.push(...idsIn(nc, at - 1), ...idsIn(nc, at));
+    }
+    return { own, side };
+  };
+  const gaps = noteCols.flatMap((ci) => Array.from({ length: plan[ci].length + 1 }, (_, i) => ({ ci, after: i - 1, ...near(ci, i - 1), placed: [] })));
+  notes.forEach((n, k) => {
+    let best = null, bestScore = -Infinity;
+    for (const gp of gaps) {
+      const mine = gp.own.filter((id) => id === n.id).length * 3 + gp.side.filter((id) => id === n.id).length * 1.5;
+      const crowd = gp.placed.length * 4 + gp.placed.filter((id) => id === n.id).length * 6;
+      const same = gaps.filter((o) => o.ci === gp.ci && Math.abs(o.after - gp.after) === 1 && o.placed.includes(n.id)).length * 2;
+      const score = mine - crowd - same + (gp.after + 1) * 0.001;   // tiny tie-break keeps the order stable
+      if (score > bestScore) { bestScore = score; best = gp; }
+    }
+    best.placed.push(n.id);
+    notesAt[best.ci].push({ after: best.after, make: n.make, side: (k + best.ci) % 2 });
   });
 
   const track = el("div", "ctrack");
