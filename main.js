@@ -840,8 +840,10 @@ if (stage) {
         const a = Math.min(Math.abs(d), 2.5);
         if (Math.abs(d) < gap) { gap = Math.abs(d); best = i; }
         if (flat.matches) {
-          // Phones: a plain swipe carousel. Videos keep their size; the ones beside the centre only dim a little.
-          sl.style.transform = ""; sl.style.opacity = (1 - Math.min(a, 1) * 0.45).toFixed(2);
+          // Phones: the same tilt as on desktop, but every video keeps its full size (no scaling while swiping).
+          const turn = still ? 0 : Math.max(-1, Math.min(1, d)) * -32;
+          sl.style.transform = `perspective(1400px) translateX(${(-d * 6).toFixed(2)}%) rotateY(${turn.toFixed(1)}deg)`;
+          sl.style.opacity = (1 - Math.min(a, 2) * 0.3).toFixed(2);
         } else {
           const turn = still ? 0 : Math.max(-1, Math.min(1, d)) * -32;
           sl.style.transform = `perspective(1400px) translateX(${(-d * 6).toFixed(2)}%) rotateY(${turn.toFixed(1)}deg) scale(${(1 - a * 0.13).toFixed(3)})`;

@@ -800,27 +800,42 @@ body:not(.is-built) .project__text, body:not(.is-built) .project__media { visibi
 
 /* ---------- Phones: flat carousel, compact dots, tidier navigation ---------- */
 @media (max-width: 700px) {
-  /* Carousel: videos sit side by side with a small gap; nothing scales or tilts while swiping. */
-  .car__track { gap: 10px; }
-  .slide { will-change: opacity; }
   /* Dots: one short row of small marks under the video. */
   .car__nav { margin-top: 10px; justify-content: center; }
   .car__dots { gap: 0; flex-wrap: nowrap; justify-content: center; }
   .car__dot { width: 14px; height: 22px; margin: 0; }
   .car__dot::after { left: 5px; top: 9px; width: 4px; height: 4px; }
   .car__dot[aria-current="true"]::after { left: 3px; width: 8px; border-radius: 2px; transform: none; }
-  /* Navigation: name on the left, the four links evenly spaced on the right. */
-  .nav { align-items: baseline; }
-  .nav__name { font-size: 1.0625rem; }
-  .nav nav { gap: 16px; font-size: 0.8125rem; }
+}
+
+/* ---------- Phones: navigation and Gallery in the Cordia manner ----------
+   The name sits centred on top with the links centred under it, on a solid bar.
+   The Gallery becomes a denser grid: small tiles with air between them, no corner blur. */
+@media (max-width: 700px) {
+  .nav, .is-home .nav { flex-direction: column; align-items: center; gap: 6px; background: var(--bg); color: var(--ink);
+    padding: calc(14px + env(safe-area-inset-top)) var(--gutter) 10px; }
+  .nav__name { font-size: 1.625rem; letter-spacing: -0.02em; }
+  .nav nav { gap: 26px; font-size: 0.875rem; }
   .nav nav a { padding: 8px 0; }
-  .nav nav a[aria-current="page"] { padding-left: 10px; }
+  .nav nav a[aria-current="page"] { padding-left: 11px; }
   .nav nav a[aria-current="page"]::before { left: 0; }
-  .nav nav a[aria-current="page"]::after { left: 10px; }
+  .nav nav a[aria-current="page"]::after { left: 11px; }
+  .is-home .nav nav a { color: var(--nav-idle); }
+  .is-home .nav nav a[aria-current="page"]::before { background: var(--ink); }
+  /* Room for the taller bar */
+  .project { padding-top: 112px; }
+  .page--list, .page--narrow, .page--contact { padding-top: 124px; }
+  /* Gallery */
+  .glow--tl, .glow--tr { display: none; }
+  .canvas { --c: 62px; --g: 22px; --cap: 22px; top: 96px; }
+  .cap { font-size: 0.625rem; gap: 4px; }
+  .tile--big .cap { font-size: 0.6875rem; }
+  .tile:not(.tile--big) .cap > span:first-child { display: none; }
+  /* Notes only where there is room for them: the widest columns, full width. */
+  .ccol--W .crow--note { display: none; }
+  .crow--note > .msg, .crow--note > .vnote { width: 100%; }
 }
 @media (max-width: 360px) {
-  .nav__name { font-size: 0.9375rem; }
-  .nav nav { gap: 11px; font-size: 0.75rem; }
-  .nav nav a { padding: 8px 0; }
-  .nav nav a[aria-current="page"] { padding-left: 9px; }
+  .nav__name { font-size: 1.5rem; }
+  .nav nav { gap: 20px; font-size: 0.8125rem; }
 }
