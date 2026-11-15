@@ -839,3 +839,38 @@ body:not(.is-built) .project__text, body:not(.is-built) .project__media { visibi
   .nav__name { font-size: 1.5rem; }
   .nav nav { gap: 20px; font-size: 0.8125rem; }
 }
+
+/* ---------- Navigation band: dark, blurred, fading out smoothly ----------
+   On every page (and on the Gallery on phones) whatever scrolls up passes under a dark blurred band
+   behind the navigation. The blur and the darkness are strongest at the top and fall off on a curve,
+   so there is no edge. The desktop Gallery keeps its own corner glows. */
+body:not(.is-home) .nav { background: none; color: #fff; isolation: isolate; }
+body:not(.is-home) .nav::before, body:not(.is-home) .nav::after {
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 190%; min-height: 150px; z-index: -1; pointer-events: none;
+}
+body:not(.is-home) .nav::before {
+  -webkit-backdrop-filter: blur(22px); backdrop-filter: blur(22px);
+  -webkit-mask-image: linear-gradient(#000 0%, #000 38%, rgba(0,0,0,.6) 58%, rgba(0,0,0,.22) 78%, transparent 100%);
+  mask-image: linear-gradient(#000 0%, #000 38%, rgba(0,0,0,.6) 58%, rgba(0,0,0,.22) 78%, transparent 100%);
+}
+body:not(.is-home) .nav::after {
+  background: linear-gradient(rgba(0,0,0,.82) 0%, rgba(0,0,0,.76) 22%, rgba(0,0,0,.62) 42%, rgba(0,0,0,.42) 60%, rgba(0,0,0,.22) 76%, rgba(0,0,0,.08) 90%, rgba(0,0,0,0) 100%);
+}
+body:not(.is-home) .nav nav a { color: rgba(255, 255, 255, 0.62); }
+body:not(.is-home) .nav nav a[aria-current="page"], body:not(.is-home) .nav nav a:focus-visible { color: #fff; }
+body:not(.is-home) .nav nav a[aria-current="page"]::before { background: #fff; }
+@media (hover: hover) and (pointer: fine) { body:not(.is-home) .nav nav a:hover { color: #fff; } }
+@media (max-width: 700px) {
+  .is-home .nav { background: none; color: #fff; isolation: isolate; }
+  .is-home .nav::before, .is-home .nav::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 190%; min-height: 150px; z-index: -1; pointer-events: none; }
+  .is-home .nav::before {
+    -webkit-backdrop-filter: blur(22px); backdrop-filter: blur(22px);
+    -webkit-mask-image: linear-gradient(#000 0%, #000 38%, rgba(0,0,0,.6) 58%, rgba(0,0,0,.22) 78%, transparent 100%);
+    mask-image: linear-gradient(#000 0%, #000 38%, rgba(0,0,0,.6) 58%, rgba(0,0,0,.22) 78%, transparent 100%);
+  }
+  .is-home .nav::after { background: linear-gradient(rgba(0,0,0,.82) 0%, rgba(0,0,0,.76) 22%, rgba(0,0,0,.62) 42%, rgba(0,0,0,.42) 60%, rgba(0,0,0,.22) 76%, rgba(0,0,0,.08) 90%, rgba(0,0,0,0) 100%); }
+  .nav, .is-home .nav { background: none; color: #fff; }
+  .is-home .nav nav a { color: rgba(255, 255, 255, 0.62); }
+  .is-home .nav nav a[aria-current="page"]::before { background: #fff; }
+  .canvas { top: 0; }
+}
