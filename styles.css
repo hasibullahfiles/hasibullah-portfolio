@@ -130,7 +130,7 @@ body:not(.is-home) .nav { background: var(--bg); }
 .home { position: fixed; inset: 0; overflow: hidden; touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; outline: 0; }
 .home.is-dragging { cursor: grabbing; }
 .canvas { --c: 150px; --g: 22px; --cap: 30px; position: absolute; inset: 0; }
-.ctrack { position: absolute; left: 0; top: 0; display: flex; gap: var(--g); will-change: transform; }
+.ctrack { position: absolute; left: 0; top: 0; display: flex; gap: var(--g); will-change: transform; transform-origin: 0 0; }
 .cblock { display: flex; gap: var(--g); }
 .ccol { flex: none; width: var(--c); }
 .ccol--W { width: calc(2 * var(--c) + var(--g)); }

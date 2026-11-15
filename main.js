@@ -500,10 +500,15 @@ if (canvas) {
   const track = el("div", "ctrack");
   canvas.append(track);
   let stacks = [], blockW = 0;
+  // Zoom: pinch on a phone or trackpad. While the fingers move the canvas is scaled (fast); once they stop it is
+  // re-laid out at that size (CSS zoom), so text and edges are drawn sharp at any level.
+  const ZMIN = 0.3, ZMAX = 3;
+  let z = window.matchMedia("(max-width: 700px)").matches ? 0.7 : 1, crisp = false, settleT = 0;
 
   function build() {
     track.textContent = ""; stacks = [];
-    const vw = home.clientWidth, vh = home.clientHeight;
+    track.style.zoom = ""; crisp = false;                                    // measure at natural size
+    const vw = home.clientWidth / ZMIN, vh = home.clientHeight / ZMIN;      // enough copies for the furthest zoom-out
     const makeBlock = (hidden) => {
       const block = el("div", "cblock");
       plan.forEach((rows, ci) => {
@@ -558,8 +563,18 @@ if (canvas) {
   const mod = (v, m) => ((v % m) + m) % m;
   function paint() {
     if (!blockW) return;
-    track.style.transform = `translate3d(${(mod(ox, blockW) - blockW).toFixed(1)}px,0,0)`;
+    const tx = (mod(ox, blockW) - blockW).toFixed(1);
+    track.style.transform = crisp ? `translate3d(${tx}px,0,0)` : `scale(${z.toFixed(4)}) translate3d(${tx}px,0,0)`;
     for (const s of stacks) s.stack.style.transform = `translate3d(0,${(mod(oy, s.h) - s.h).toFixed(1)}px,0)`;
+  }
+  const settle = () => { clearTimeout(settleT); settleT = setTimeout(() => { if (z === 1) { track.style.zoom = ""; crisp = false; } else { track.style.zoom = String(z); crisp = true; } paint(); }, 160); };
+  // Zoom to `nz`, keeping the point under (px, py) (in the Gallery's own box) where it is.
+  function zoomTo(nz, px, py) {
+    nz = Math.max(ZMIN, Math.min(ZMAX, nz));
+    if (nz === z) return;
+    if (crisp) { track.style.zoom = ""; crisp = false; }
+    ox += px * (1 / nz - 1 / z); oy += py * (1 / nz - 1 / z);
+    z = nz; paint(); settle();
   }
   const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   function glide() {
@@ -568,24 +583,44 @@ if (canvas) {
     raf = Math.abs(vx) + Math.abs(vy) > 0.2 ? requestAnimationFrame(glide) : 0;
   }
 
-  let drag = null, moved = 0;
+  let drag = null, moved = 0, pinch = null;
+  const touches = new Map();
+  const box = () => home.getBoundingClientRect();
+  const fingers = () => { const [a, b] = [...touches.values()]; return { d: Math.hypot(a.x - b.x, a.y - b.y) || 1, x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 }; };
   home.addEventListener("pointerdown", (e) => {
     if (e.button) return;
     cancelAnimationFrame(raf); raf = 0; vx = vy = 0;
+    if (e.pointerType === "touch") {
+      touches.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (touches.size === 2) { const m = fingers(); pinch = { d: m.d, z, x: m.x, y: m.y }; drag = null; moved = 99; home.classList.add("is-dragging"); previewOff = true; return; }
+    }
     drag = { x: e.clientX, y: e.clientY, t: performance.now() }; moved = 0;
   });
   window.addEventListener("pointermove", (e) => {
+    if (touches.has(e.pointerId)) touches.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pinch && touches.size === 2) {
+      const m = fingers(), b = box();
+      ox += (m.x - pinch.x) / z; oy += (m.y - pinch.y) / z; pinch.x = m.x; pinch.y = m.y;   // two fingers also move the canvas
+      zoomTo(pinch.z * (m.d / pinch.d), m.x - b.left, m.y - b.top);
+      paint();
+      return;
+    }
     if (!drag) return;
     const dx = e.clientX - drag.x, dy = e.clientY - drag.y, now = performance.now();
     moved += Math.abs(dx) + Math.abs(dy);
     if (moved > 5 && !home.classList.contains("is-dragging")) { home.classList.add("is-dragging"); previewOff = true; }
     const dt = Math.max(1, now - drag.t);
-    vx = (dx / dt) * 16; vy = (dy / dt) * 16;
-    ox += dx; oy += dy;
+    vx = (dx / dt) * 16 / z; vy = (dy / dt) * 16 / z;
+    ox += dx / z; oy += dy / z;
     drag = { x: e.clientX, y: e.clientY, t: now };
     paint();
   });
-  const release = () => {
+  const release = (e) => {
+    if (e && touches.has(e.pointerId)) touches.delete(e.pointerId);
+    if (pinch) {
+      if (touches.size < 2) { pinch = null; home.classList.remove("is-dragging"); previewOff = false; suppressClick = true; setTimeout(() => { suppressClick = false; }, 0); }
+      return;
+    }
     if (!drag) return;
     drag = null;
     home.classList.remove("is-dragging"); previewOff = false;
@@ -594,11 +629,21 @@ if (canvas) {
   };
   window.addEventListener("pointerup", release);
   window.addEventListener("pointercancel", release);
-  home.addEventListener("wheel", (e) => { e.preventDefault(); ox -= e.deltaX; oy -= e.deltaY; paint(); }, { passive: false });
+  // Trackpad: two-finger scroll moves the canvas; pinch (sent as a wheel with Ctrl held) zooms at the pointer.
+  home.addEventListener("wheel", (e) => {
+    e.preventDefault();
+    if (e.ctrlKey || e.metaKey) { const b = box(); zoomTo(z * Math.exp(-e.deltaY * 0.01), e.clientX - b.left, e.clientY - b.top); }
+    else { ox -= e.deltaX / z; oy -= e.deltaY / z; paint(); }
+  }, { passive: false });
+  // Safari on a Mac reports a trackpad pinch as gesture events.
+  let gz = 1;
+  home.addEventListener("gesturestart", (e) => { e.preventDefault(); gz = z; });
+  home.addEventListener("gesturechange", (e) => { e.preventDefault(); const b = box(); zoomTo(gz * e.scale, e.clientX - b.left, e.clientY - b.top); });
+  home.addEventListener("gestureend", (e) => e.preventDefault());
   home.addEventListener("keydown", (e) => {
     const step = { ArrowLeft: [90, 0], ArrowRight: [-90, 0], ArrowUp: [0, 90], ArrowDown: [0, -90] }[e.key];
     if (!step || e.target.closest("a")) return;
-    e.preventDefault(); ox += step[0]; oy += step[1]; paint();
+    e.preventDefault(); ox += step[0] / z; oy += step[1] / z; paint();
   });
   home.addEventListener("dragstart", (e) => e.preventDefault());
 
@@ -613,15 +658,16 @@ if (canvas) {
       const one = row.querySelector('[data-code="DVg-_5giapC"]');
       if (one) { const t = one.getBoundingClientRect(); b = { left: t.left, width: t.width, top: b.top, height: b.height }; }
     }
-    ox += home.clientWidth / 2 - (b.left + b.width / 2);
-    oy += home.clientHeight / 2 - (b.top + b.height / 2) + 20;
-    paint();
+    const hb = home.getBoundingClientRect();
+    ox += (hb.left + hb.width / 2 - (b.left + b.width / 2)) / z;
+    oy += (hb.top + hb.height / 2 - (b.top + b.height / 2) + 20) / z;
+    paint(); settle();
   }
   build();
   openingView();
   // Until the visitor moves the canvas, keep the opening view centred through resizes and rotation.
   let touched = false;
-  for (const ev of ["pointerdown", "wheel", "keydown"]) home.addEventListener(ev, () => { touched = true; }, { passive: true });
+  for (const ev of ["pointerdown", "wheel", "keydown", "gesturestart"]) home.addEventListener(ev, () => { touched = true; }, { passive: true });
   let rt = 0;
   window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => { build(); if (!touched) openingView(); }, 150); });
 }
