@@ -874,3 +874,11 @@ body:not(.is-home) .nav nav a[aria-current="page"]::before { background: #fff; }
   .is-home .nav nav a[aria-current="page"]::before { background: #fff; }
   .canvas { top: 0; }
 }
+
+/* More room under the navigation, so page content starts clear of the band's blur and darkening. */
+.page--list, .page--narrow, .page--contact { padding-top: clamp(168px, 22vh, 210px); }
+.project { padding-top: 118px; }
+@media (max-width: 700px) {
+  .page--list, .page--narrow, .page--contact { padding-top: 188px; }
+  .project { padding-top: 180px; }
+}
