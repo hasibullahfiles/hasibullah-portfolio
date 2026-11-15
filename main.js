@@ -219,6 +219,24 @@ const lock = (v) => {
   v.addEventListener("ended", () => { clearTimeout(idle); v.controls = true; });
   return v;
 };
+// A video that fails to load (a dropped connection, or the video host out of reach on some networks) tries again,
+// then falls back to the copy kept on this site, instead of staying on the browser's "can't play" icon.
+const sturdy = (v) => {
+  v.addEventListener("play", () => { v._want = true; });
+  v.addEventListener("pause", () => { if (!v.error) v._want = false; });
+  v.addEventListener("error", () => {
+    const code = v._code;
+    if (!code || !v.getAttribute("src") || (v._tries || 0) >= 3) return;
+    const n = v._tries = (v._tries || 0) + 1, at = v.currentTime || 0, want = v._want;
+    setTimeout(() => {
+      if (v._code !== code) return;
+      v.src = n === 1 ? hqOf(code) : `/videos/${code}.mp4`;
+      if (at > 0) v.addEventListener("loadedmetadata", () => { try { v.currentTime = at; } catch (e) { /* not seekable yet */ } }, { once: true });
+      if (want) v.play().catch(() => {}); else v.load();
+    }, n === 1 ? 250 : 600);
+  });
+  return v;
+};
 const NAMES = { instagram: "Instagram", youtube: "YouTube", tiktok: "TikTok", x: "X", linkedin: "LinkedIn", facebook: "Facebook", threads: "Threads" };
 const icon = (p) => { const i = el("img", "ico"); i.src = `/icons/${p}.svg`; i.alt = NAMES[p] || p; i.width = 14; i.height = 14; return i; };
 // "logos + combined views" for one video.
@@ -324,8 +342,8 @@ function openPlayer(r) {
     player = el("dialog", "player");
     player.innerHTML = '<div class="player__in"><video controls playsinline></video><p class="player__meta"><span></span><span></span><a class="u" target="_blank" rel="noopener"></a></p></div><button class="player__close" type="button" aria-label="Close"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>';
     document.body.append(player);
-    lock(player.querySelector("video"));
-    const stop = () => { const v = player.querySelector("video"); v.pause(); v.removeAttribute("src"); v.load(); };
+    sturdy(lock(player.querySelector("video")));
+    const stop = () => { const v = player.querySelector("video"); v._code = null; v.pause(); v.removeAttribute("src"); v.load(); };
     player.addEventListener("close", stop);
     // Closing the player returns the address (and the tab title) to the page underneath.
     player.addEventListener("close", () => {
@@ -337,6 +355,7 @@ function openPlayer(r) {
     player.addEventListener("click", (e) => { if (e.target === player || e.target.classList.contains("player__in")) player.close(); });
   }
   const v = player.querySelector("video");
+  v._code = r.code; v._tries = 0; v._want = false;
   v.src = hqOf(r.code);
   v.poster = `/covers/${r.code}.jpg`;
   const [a, b, c] = player.querySelector(".player__meta").children;
@@ -567,7 +586,25 @@ if (canvas) {
     track.style.transform = crisp ? `translate3d(${tx}px,0,0)` : `scale(${z.toFixed(4)}) translate3d(${tx}px,0,0)`;
     for (const s of stacks) s.stack.style.transform = `translate3d(0,${(mod(oy, s.h) - s.h).toFixed(1)}px,0)`;
   }
-  const settle = () => { clearTimeout(settleT); settleT = setTimeout(() => { if (z === 1) { track.style.zoom = ""; crisp = false; } else { track.style.zoom = String(z); crisp = true; } paint(); }, 160); };
+  // Some phone browsers resize the boxes under CSS zoom but leave the text at its old size. Measure a message once:
+  // if its text did not follow, never use CSS zoom there and keep the plain scale, which resizes everything together.
+  let zoomOK = null;
+  const zoomWorks = () => {
+    const p = track.querySelector(".msg__text");
+    if (!p) return true;
+    const keep = track.style.transform;
+    track.style.transform = "none";
+    track.style.zoom = ""; const h1 = p.getBoundingClientRect().height, w1 = p.getBoundingClientRect().width;
+    track.style.zoom = String(z); const hz = p.getBoundingClientRect().height, wz = p.getBoundingClientRect().width;
+    track.style.zoom = ""; track.style.transform = keep;
+    if (!h1 || !w1) return true;
+    return Math.abs(hz / h1 / z - 1) < 0.2 && Math.abs(wz / w1 / z - 1) < 0.2;
+  };
+  const settle = () => { clearTimeout(settleT); settleT = setTimeout(() => {
+    if (zoomOK === null && Math.abs(z - 1) >= 0.25) zoomOK = zoomWorks();
+    if (z === 1 || zoomOK === false) { track.style.zoom = ""; crisp = false; } else { track.style.zoom = String(z); crisp = true; }
+    paint();
+  }, 160); };
   // Zoom to `nz`, keeping the point under (px, py) (in the Gallery's own box) where it is.
   function zoomTo(nz, px, py) {
     nz = Math.max(ZMIN, Math.min(ZMAX, nz));
@@ -813,8 +850,8 @@ if (stage) {
     const m = el("div", r.wide ? "m m--wide" : "m");
     if (r.local) {
       const v = el("video");
-      v.controls = true; v.playsInline = true; v.preload = "none"; lock(v);
-      v.poster = `/covers/${r.code}.webp`; v.src = hqOf(r.code);
+      v.controls = true; v.playsInline = true; v.preload = "none"; lock(v); sturdy(v);
+      v.poster = `/covers/${r.code}.webp`; v._code = r.code; v.src = hqOf(r.code);
       v.addEventListener("play", () => { document.querySelectorAll("audio, video").forEach((o) => { if (o !== v) o.pause(); }); setUrl(r); });
       m.append(v);
     } else {

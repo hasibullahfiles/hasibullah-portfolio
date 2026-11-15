@@ -237,7 +237,7 @@ body:not(.is-home) .nav { background: var(--bg); }
 .m video[controls], .m video.has-controls { pointer-events: auto; }
 
 /* Cover-flow carousel: current video centred, the rest stepping back at the sides */
-.car { --h: min(calc(100dvh - 250px), 800px); }
+.car { --h: min(calc(100svh - 250px), 800px); }
 .car__track {
   position: relative; display: flex; gap: 0; align-items: center;
   overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scrollbar-width: none;
@@ -290,7 +290,7 @@ body:not(.is-home) .nav { background: var(--bg); }
 .lrow__text { position: sticky; top: 90px; display: grid; gap: 10px; justify-items: start; }
 .lrow__text h2 { font-size: 1rem; font-weight: 400; }
 .lrow__note { color: var(--muted); max-width: 34ch; }
-.lrow .m { border-radius: 0; height: min(calc(100dvh - 150px), 820px); width: auto; justify-self: start; }
+.lrow .m { border-radius: 0; height: min(calc(100svh - 150px), 820px); width: auto; justify-self: start; }
 .lrow .m--wide { height: auto; width: 100%; }
 
 .soon { color: var(--muted); margin-top: 18px; font-size: 0.8125rem; }
@@ -375,7 +375,7 @@ body:not(.is-home) .nav { background: var(--bg); }
   .wrow__name { font-size: 1.0625rem; }
   .project { grid-template-columns: minmax(0, 1fr); padding-right: var(--gutter); }
   .project__text { position: static; padding-top: 40px; margin-bottom: 28px; }
-  .car { --h: min(calc(100dvh - 240px), 620px); }
+  .car { --h: min(calc(100svh - 240px), 620px); }
   .car__nav { padding-right: 0; }
   .slide--wide .m { width: 84vw; }
   .lrow { grid-template-columns: minmax(0, 1fr); gap: 12px; }
@@ -508,7 +508,7 @@ body:not(.is-home) .nav nav a:focus-visible { color: var(--ink); }
 /* Dark mode details */
 :root[data-theme="dark"] .ico { filter: invert(1); }
 :root[data-theme="dark"] .form ::placeholder { color: var(--faint); }
-html { background: var(--bg); }
+html { background: var(--bg); -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 
 /* Client header order: picture, name, follower total, then the social icons */
 .reach { margin-top: 12px; }
@@ -552,7 +552,7 @@ html { background: var(--bg); }
   .soc { width: 40px; height: 40px; }
   .pnames { flex-direction: row; flex-wrap: wrap; gap: 4px 14px; margin-top: 18px; }
   .pname[aria-current="true"] { transform: none; }
-  .car { --h: min(calc(100dvh - 250px), 640px); margin: 0 calc(-1 * var(--gutter)); }
+  .car { --h: min(calc(100svh - 250px), 640px); margin: 0 calc(-1 * var(--gutter)); }
   .car__track { padding-block: 18px; min-height: 0; }
   .car__view::before, .car__view::after { height: 18px; }
   .car__nav { margin-top: 8px; padding: 0; gap: 12px; }
