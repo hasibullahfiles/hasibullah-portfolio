@@ -812,6 +812,7 @@ if (stage) {
     const dots = el("div", "car__dots");
     let cur = 0;
     const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const flat = window.matchMedia("(max-width: 700px)");
     const mid = (sl) => sl.offsetLeft + sl.offsetWidth / 2;
     // `want` is where we are heading, so quick repeated presses each move one further.
     let want = 0, settle = 0;
@@ -838,9 +839,14 @@ if (stage) {
         const d = (mid(sl) - c) / sl.offsetWidth;          // 0 = centred, ±1 = one video away
         const a = Math.min(Math.abs(d), 2.5);
         if (Math.abs(d) < gap) { gap = Math.abs(d); best = i; }
-        const turn = still ? 0 : Math.max(-1, Math.min(1, d)) * -32;
-        sl.style.transform = `perspective(1400px) translateX(${(-d * 6).toFixed(2)}%) rotateY(${turn.toFixed(1)}deg) scale(${(1 - a * 0.13).toFixed(3)})`;
-        sl.style.opacity = (1 - Math.min(a, 2) * 0.3).toFixed(2);
+        if (flat.matches) {
+          // Phones: a plain swipe carousel. Videos keep their size; the ones beside the centre only dim a little.
+          sl.style.transform = ""; sl.style.opacity = (1 - Math.min(a, 1) * 0.45).toFixed(2);
+        } else {
+          const turn = still ? 0 : Math.max(-1, Math.min(1, d)) * -32;
+          sl.style.transform = `perspective(1400px) translateX(${(-d * 6).toFixed(2)}%) rotateY(${turn.toFixed(1)}deg) scale(${(1 - a * 0.13).toFixed(3)})`;
+          sl.style.opacity = (1 - Math.min(a, 2) * 0.3).toFixed(2);
+        }
         sl.style.zIndex = String(100 - Math.round(a * 10));
       });
       if (best !== cur || !slides[cur].classList.contains("is-cur")) {

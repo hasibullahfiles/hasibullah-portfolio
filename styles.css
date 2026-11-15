@@ -759,7 +759,7 @@ html { background: var(--bg); }
 body:not(.is-built) .project__text, body:not(.is-built) .project__media { visibility: hidden; }
 /* Comfortable tap areas for the platform icons under a video (24px) without changing how they look. */
 .stats__link { padding: 5px; margin: -5px -2px; }
-@media (max-width: 700px) { .car__dots { gap: 14px; } }
+
 
 .tmon__voices { display: contents; }
 .tmon__voices + .msg { margin-top: 12px; }
@@ -782,12 +782,8 @@ body:not(.is-built) .project__text, body:not(.is-built) .project__media { visibi
   .project__text .reach__total--second { margin-top: 2px; }
   .project__text .socials { margin-top: 14px; }
   .project__text .soc { width: 36px; height: 36px; }
-  /* Testimonials: one row you swipe sideways, in place of a long stack. */
-  .project__media .tmon { display: flex; align-items: flex-start; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
-    margin: 28px calc(-1 * var(--gutter)) 0; padding: 0 var(--gutter) 2px; }
-  .project__media .tmon::-webkit-scrollbar { display: none; }
-  .project__media .tmon > * { flex: 0 0 84%; scroll-snap-align: center; margin-top: 0; }
-  .project__media .tmon > :only-child { flex-basis: 100%; }
+  /* Testimonials stay a vertical stack, full width. */
+  .project__media .tmon { margin-top: 28px; justify-items: stretch; }
   .project__media .tmon__voices { display: grid; gap: 4px; }
   /* Gallery notes: the name on one line, no date, so the card stays short. */
   .canvas .msg { padding: 10px 12px; gap: 8px; grid-template-columns: 26px minmax(0, 1fr); }
@@ -800,4 +796,31 @@ body:not(.is-built) .project__text, body:not(.is-built) .project__media { visibi
 @media (max-width: 700px) {
   body:not(.is-home) .theme { position: static; display: block; margin: 0 auto calc(28px + env(safe-area-inset-bottom)); }
   body:not(.is-home) .foot { padding-bottom: 18px; }
+}
+
+/* ---------- Phones: flat carousel, compact dots, tidier navigation ---------- */
+@media (max-width: 700px) {
+  /* Carousel: videos sit side by side with a small gap; nothing scales or tilts while swiping. */
+  .car__track { gap: 10px; }
+  .slide { will-change: opacity; }
+  /* Dots: one short row of small marks under the video. */
+  .car__nav { margin-top: 10px; justify-content: center; }
+  .car__dots { gap: 0; flex-wrap: nowrap; justify-content: center; }
+  .car__dot { width: 14px; height: 22px; margin: 0; }
+  .car__dot::after { left: 5px; top: 9px; width: 4px; height: 4px; }
+  .car__dot[aria-current="true"]::after { left: 3px; width: 8px; border-radius: 2px; transform: none; }
+  /* Navigation: name on the left, the four links evenly spaced on the right. */
+  .nav { align-items: baseline; }
+  .nav__name { font-size: 1.0625rem; }
+  .nav nav { gap: 16px; font-size: 0.8125rem; }
+  .nav nav a { padding: 8px 0; }
+  .nav nav a[aria-current="page"] { padding-left: 10px; }
+  .nav nav a[aria-current="page"]::before { left: 0; }
+  .nav nav a[aria-current="page"]::after { left: 10px; }
+}
+@media (max-width: 360px) {
+  .nav__name { font-size: 0.9375rem; }
+  .nav nav { gap: 11px; font-size: 0.75rem; }
+  .nav nav a { padding: 8px 0; }
+  .nav nav a[aria-current="page"] { padding-left: 9px; }
 }
