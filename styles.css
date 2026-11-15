@@ -882,3 +882,27 @@ body:not(.is-home) .nav nav a[aria-current="page"]::before { background: #fff; }
   .page--list, .page--narrow, .page--contact { padding-top: 188px; }
   .project { padding-top: 180px; }
 }
+
+/* Navigation band off the Gallery: the page's own colour (light in light mode, dark in dark mode) and tighter.
+   Content sliding up under it blurs and dissolves into the page, and the navigation text stays crisp on top. */
+body:not(.is-home) .nav { color: var(--ink); }
+body:not(.is-home) .nav::before, body:not(.is-home) .nav::after { height: 128%; min-height: 0; }
+body:not(.is-home) .nav::before {
+  -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
+  -webkit-mask-image: linear-gradient(#000 0%, #000 62%, rgba(0,0,0,.55) 80%, transparent 100%);
+  mask-image: linear-gradient(#000 0%, #000 62%, rgba(0,0,0,.55) 80%, transparent 100%);
+}
+body:not(.is-home) .nav::after {
+  background: linear-gradient(var(--bg) 0%, color-mix(in srgb, var(--bg) 94%, transparent) 40%, color-mix(in srgb, var(--bg) 78%, transparent) 62%, color-mix(in srgb, var(--bg) 46%, transparent) 80%, color-mix(in srgb, var(--bg) 16%, transparent) 92%, transparent 100%);
+}
+body:not(.is-home) .nav nav a { color: var(--nav-idle); }
+body:not(.is-home) .nav nav a[aria-current="page"], body:not(.is-home) .nav nav a:focus-visible { color: var(--ink); }
+body:not(.is-home) .nav nav a[aria-current="page"]::before { background: var(--ink); }
+@media (hover: hover) and (pointer: fine) { body:not(.is-home) .nav nav a:hover { color: var(--ink); } }
+/* The band is shorter now, so pages start a little higher again (still clear of it). */
+.page--list, .page--narrow, .page--contact { padding-top: clamp(132px, 18vh, 176px); }
+.project { padding-top: 96px; }
+@media (max-width: 700px) {
+  .page--list, .page--narrow, .page--contact { padding-top: 150px; }
+  .project { padding-top: 142px; }
+}
